@@ -46,13 +46,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="App\Action.cs" />
+    <Compile Include="App\ActionData.cs" />
+    <Compile Include="App\BattleAI.cs" />
+    <Compile Include="App\G3DMap.cs" />
+    <Compile Include="App\G3DModel.cs" />
+    <Compile Include="App\GameMain.cs" />
+    <Compile Include="App\RangeArea.cs" />
+    <Compile Include="App\SceneBattle.cs" />
+    <Compile Include="App\SceneEndBattle.cs" />
+    <Compile Include="App\ScenePreBattle.cs" />
+    <Compile Include="App\SceneSetup.cs" />
+    <Compile Include="App\Script.cs" />
+    <Compile Include="App\Unit.cs" />
+    <Compile Include="App\UserInterface.cs" />
+    <Compile Include="Base\DxDLL.cs" />
+    <Compile Include="Base\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="Base\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Base\G3DCamera.cs" />
+    <Compile Include="Base\GameBase.cs" />
+    <Compile Include="Base\Input.cs" />
+    <Compile Include="Base\Program.cs" />
+    <Compile Include="Base\S3DCube.cs" />
+    <Compile Include="Base\SDrawImage.cs" />
+    <Compile Include="Base\SFont.cs" />
+    <Compile Include="Base\Sound.cs" />
+    <Compile Include="Base\STask.cs" />
+    <Compile Include="Base\WaitTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -76,6 +100,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

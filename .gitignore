@@ -1,6 +1,9 @@
-# –³Ž‹‚µ‚½‚¢‚à‚Ì
+# –³Ž‹‚µ‚½‚¢
 project/TOL_SRPG/obj/
 project/TOL_SRPG/bin/Debug/
 
-# –³Ž‹‚µ‚È‚¢ƒtƒHƒ‹ƒ_
+# –³Ž‹‚µ‚È‚¢
 !project/TOL_SRPG/bin/Debug/data/
+!project/TOL_SRPG/bin/Debug/data/DxLib.dll
+!project/TOL_SRPG/bin/Debug/data/DxLib_x64.dll
+!project/TOL_SRPG/bin/Debug/data/DxLibDotNet.dll
