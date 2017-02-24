@@ -1,0 +1,13 @@
+
+def Setup
+	$ SystemName  "Basic／攻撃／弓"
+	$ ViewName    "攻撃／弓"
+	$ Type        "攻撃"
+	$ Range 1 4 "投射" "延長可"
+	$ EffectValue "ATK" 100 0 0 60 "DEF" 50
+	InstantEffect "Sound"   0 "共通" "戦闘／攻撃／剣・開始" 50
+	InstantEffect "Sound"  20 "成功" "戦闘／攻撃／剣・終了" 50
+	InstantEffect "Sound"  20 "失敗" "戦闘／攻撃／剣・失敗" 50
+	InstantEffect "Damage" 20
+
+

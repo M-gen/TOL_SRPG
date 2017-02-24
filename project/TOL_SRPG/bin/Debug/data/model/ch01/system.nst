@@ -1,0 +1,21 @@
+
+def Setup
+	ConectMotion "歩行" 0
+	ConectMotion "戦闘不能" 1
+
+	// カラー設定
+	SetColorChange 0 1 "uv_ch3_01.png"
+	SetColorChange 1 1 "uv_ch3_02.png"
+
+def Status
+	$ ClassName "ピープル"
+	$ HP   40 7
+	$ ATK  25 3
+	$ DEF  15 2
+	$ MGK  10 2
+	$ MOVE  4 0
+	$ JUMP  3 0
+	$ WT   77 0
+	$ Action "Basic／攻撃／剣" 100
+	$ ExpBonus 150
+	

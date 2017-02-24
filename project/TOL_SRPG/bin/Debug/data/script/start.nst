@@ -1,0 +1,33 @@
+
+def Setup
+	// 初期化用 'xxxx'
+	
+	ConectSound "戦闘／攻撃／弓・開始"           "data/sound/戦闘／攻撃／矢を放った/A5_04115.WAV"
+	ConectSound "戦闘／攻撃／弓・終了"           "data/sound/戦闘／ダメージを受けた/A5_13393.WAV"
+	ConectSound "戦闘／攻撃／弓・失敗"           "data/sound/戦闘／攻撃／矢、失敗/A5_05158.WAV"
+	ConectSound "戦闘／攻撃／剣・開始"           "data/sound/戦闘／攻撃／スイング/A5_04126.WAV"
+	ConectSound "戦闘／攻撃／剣・終了"           "data/sound/戦闘／ダメージを受けた/A5_04105.WAV"
+	ConectSound "戦闘／攻撃／魔法・ヒートボイル" "data/sound/戦闘／魔法／ヒートボイル/A5_12388.WAV"
+	ConectSound "戦闘／倒れる音"                 "data/sound/戦闘／倒れる音/A5_10316.WAV"
+	ConectSound "システム／選択"                 "data/sound/システム／決定音／選択/A5_02041.WAV"
+	ConectSound "システム／解除"                 "data/sound/システム／決定音／選択/A5_02041_pich_m4.wav"
+	ConectSound "システム／失敗"                 "data/sound/システム／失敗音/mix_A5_05158_A5_2040_m1.WAV"
+	ConectSound "システム／入れ替え"             "data/sound/システム／決定音／選択/A5_02041_pich_p4.wav"
+	ConectSound "システム／カーソル移動"         "data/sound/システム／カーソル移動/A5_01015_pich_m10.wav"
+	ConectSound "システム／出陣"                 "data/sound/システム／決定音／出陣/A5_02045.WAV"
+	ConectSound "イベント／勝利"                 "data/sound/イベント／勝利、達成/A5_06176.WAV"
+	ConectSound "イベント／敗北"                 "data/sound/イベント／敗北/A5_06175.WAV"
+	
+	ConectOnePointModel "戦闘／矢" "data/model/action_items/shoot_arrow.pmd"
+	
+	SetupActionData "data/script/action/action_001_atk_sword.nst"
+	SetupActionData "data/script/action/action_002_atk_arrow.nst"
+	SetupActionData "data/script/action/action_003_atk_magic_heatboil.nst"
+
+	// DebugMode "UI"
+	// DebugMode "Auto"
+	
+	// シーンのセットアップ
+	SetupScene Battle "data/script/stage_0.nst"
+	//SetupScene PreBattle "data/script/pre_battle.nst" "data/script/stage_0.nst"
+

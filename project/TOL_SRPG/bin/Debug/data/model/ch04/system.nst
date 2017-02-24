@@ -1,0 +1,22 @@
+
+def Setup
+	ConectMotion "歩行" 0
+	ConectMotion "戦闘不能" 1
+	
+	// カラー設定
+	SetColorChange 0 1 "uv_ch3_魔道士.png"
+	SetColorChange 1 1 "uv_ch3_魔道士_2.png"
+
+def Status
+	$ ClassName "ウィザード"
+	$ HP   35 5
+	$ ATK  10 2
+	$ DEF  10 1
+	$ MGK  27 5
+	$ MOVE  3 0
+	$ JUMP  1 0
+	$ WT   83 0
+	$ Action "Basic／攻撃／ヒートボイル" 100
+	$ ExpBonus 120
+
+
