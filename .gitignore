@@ -1,9 +1,12 @@
-!/project/TOL_SRPG/bin/Debug/data/
-!/project/TOL_SRPG/bin/Debug/data/DxLib.dll
-!/project/TOL_SRPG/bin/Debug/data/DxLib_x64.dll
-!/project/TOL_SRPG/bin/Debug/data/DxLibDotNet.dll
-
 project/TOL_SRPG/obj/
-project/TOL_SRPG/bin/Debug/
+project/TOL_SRPG/bin/Debug/.vs
+project/TOL_SRPG/bin/Debug/TOL_SRPG.exe
+project/TOL_SRPG/bin/Debug/TOL_SRPG.exe.config
+project/TOL_SRPG/bin/Debug/TOL_SRPG.pdb
+project/TOL_SRPG/bin/Debug/TOL_SRPG.vshost.exe
+project/TOL_SRPG/bin/Debug/TOL_SRPG.vshost.exe.config
+project/TOL_SRPG/bin/Debug/TOL_SRPG.vshost.exe.manifest
+project/TOL_SRPG/bin/Debug/Log.txt
+project/TOL_SRPG/bin/Debug/sound/
 project/TOL_SRPG/bin/Release/
 
