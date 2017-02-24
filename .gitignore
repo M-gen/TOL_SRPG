@@ -1,3 +1,5 @@
+_ignore/
+bat/release/
 project/TOL_SRPG/obj/
 project/TOL_SRPG/bin/Debug/.vs
 project/TOL_SRPG/bin/Debug/TOL_SRPG.exe
@@ -9,4 +11,3 @@ project/TOL_SRPG/bin/Debug/TOL_SRPG.vshost.exe.manifest
 project/TOL_SRPG/bin/Debug/Log.txt
 project/TOL_SRPG/bin/Debug/data/sound/
 project/TOL_SRPG/bin/Release/
-
