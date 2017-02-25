@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using DxlibGame;
+using TOL_SRPG.Base;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     // 初期化用のスクリプトをうまく走らせるためのシーン
     public class SceneSetup : Scene

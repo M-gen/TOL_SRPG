@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using DxLibDLL;
 
-namespace DxlibGame
+namespace TOL_SRPG.Base
 {
     public class SFont : IDisposable
     {

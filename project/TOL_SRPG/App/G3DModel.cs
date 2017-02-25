@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DxLibDLL;
-using DxlibGame;
+using TOL_SRPG.Base;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     public class G3DModel : IDisposable
     {
@@ -42,7 +42,7 @@ namespace DxlibGameSimRPG
             public float motion_timer;
             public float motion_timer_add;
             public float motion_time_max;
-            public bool is_loop;
+            //public bool is_loop;
             public MotionType motion_type;
         }
         List<Motion> motions = new List<Motion>();

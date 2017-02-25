@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-using DxlibGame;
+using TOL_SRPG.Base;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     public class BattleAI
     {
@@ -18,7 +18,7 @@ namespace DxlibGameSimRPG
             public Unit target;      // これだとターゲットが1体しか対応できないけど
             public int target_map_x;
             public int target_map_y;
-            public double evaluation;  // 評価
+            //public double evaluation;  // 評価
         }
 
         class ActionDatas

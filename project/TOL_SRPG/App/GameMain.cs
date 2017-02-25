@@ -7,9 +7,9 @@ using System.Drawing;
 
 
 using DxLibDLL;
-using DxlibGame;
+using TOL_SRPG.Base;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     public class GameMain : GameMainBase
     {

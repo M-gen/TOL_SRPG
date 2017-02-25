@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Drawing;
 
 using DxLibDLL;
-using DxlibGame;
+using TOL_SRPG.Base;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     class SceneEndBattle : Scene
     {
@@ -160,19 +160,19 @@ namespace DxlibGameSimRPG
             var unit_manager = game_main.unit_manager;
             //var action_manager = game_main.action_manager;
 
-            switch (t.command[0])
-            {
-                //case "MapData":
-                //    {
-                //        var size = t.command.Count();
-                //        for (var i = 1; i < size; i++)
-                //        {
-                //            setup_script_data.map_data.Add(t.GetInt(i));
-                //        }
-                //        setup_script_data.map_w = size - 1;
-                //    }
-                //    break;
-            }
+            //switch (t.command[0])
+            //{
+            //    //case "MapData":
+            //    //    {
+            //    //        var size = t.command.Count();
+            //    //        for (var i = 1; i < size; i++)
+            //    //        {
+            //    //            setup_script_data.map_data.Add(t.GetInt(i));
+            //    //        }
+            //    //        setup_script_data.map_w = size - 1;
+            //    //    }
+            //    //    break;
+            //}
             return false;
         }
     }

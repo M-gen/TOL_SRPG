@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DxLibDLL;
-using DxlibGame;
+using TOL_SRPG.Base;
 using System.Drawing;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     public class Action : IDisposable
     {

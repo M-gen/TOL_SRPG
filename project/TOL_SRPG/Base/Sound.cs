@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using DxLibDLL;
 
-namespace DxlibGame
+namespace TOL_SRPG.Base
 {
     // 音管理
     // staticを使うので複数存在できないが、導線を作るのが億劫なので

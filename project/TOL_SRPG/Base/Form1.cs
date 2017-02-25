@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using DxLibDLL;
-using DxlibGame;
+using TOL_SRPG.App;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.Base
 {
     public partial class Form1 : Form
     {

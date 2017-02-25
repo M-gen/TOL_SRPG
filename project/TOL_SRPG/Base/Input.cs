@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 // 入力制御用クラス
 
-namespace DxlibGame
+namespace TOL_SRPG.Base
 {
     public class Input
     {

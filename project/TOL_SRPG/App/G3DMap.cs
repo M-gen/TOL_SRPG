@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 using System.Drawing;
 
 using DxLibDLL;
-using DxlibGame;
-using DxlibGame.Base;
+using TOL_SRPG.Base;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     public class Square
     {

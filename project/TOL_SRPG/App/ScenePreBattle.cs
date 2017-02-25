@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DxLibDLL;
-using DxlibGame;
-using DxlibGame.Base;
+using TOL_SRPG.Base;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     // 戦闘準備シーン
     public class ScenePreBattle : Scene

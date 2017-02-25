@@ -1,4 +1,4 @@
-﻿namespace DxlibGameSimRPG
+﻿namespace TOL_SRPG.Base
 {
     partial class Form1
     {

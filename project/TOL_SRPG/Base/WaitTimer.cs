@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace DxlibGame
+namespace TOL_SRPG.Base
 {
     class WaitTimer
     {
@@ -44,7 +44,7 @@ namespace DxlibGame
         }
 
         int main_wait_time = 16;    // 基本となる待機時間（ミリ秒）
-        int delay_msec = 3;         // Task.Delayの時間
+        //int delay_msec = 3;         // Task.Delayの時間
         long cor_time = 0;          // 補正時間
         int cor_counter = 0;        // 補正用のカウント
         long last_wait_time = 0;     // 前回からの更新時間 情報保存用

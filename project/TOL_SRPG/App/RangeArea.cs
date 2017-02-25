@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     // 距離から算出されるエリアについての処理群
     // 汎用性をもたせつつ、基礎のRangeAreaの呼び出す関数はg3d_mapを参照しているので注意（変更は可能、高さ取得のため）

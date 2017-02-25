@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using DxLibDLL;
 
-namespace DxlibGame.Base
+namespace TOL_SRPG.Base
 {
     public class S3DPoint
     {

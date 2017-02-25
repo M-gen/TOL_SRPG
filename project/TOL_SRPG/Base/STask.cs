@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-using DxlibGameSimRPG; // ここに、この名前空間つかいたくないけど、GameMainのが整理できてないので保留
-
-namespace DxlibGame
+namespace TOL_SRPG.Base
 {
     // メインループに処理を実行させるためのクラス
     // 1回だけ実行させたい処理を埋め込むためのもの

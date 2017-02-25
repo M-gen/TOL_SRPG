@@ -5,17 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DxLibDLL;
-using DxlibGame;
 
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.Base
 {
     public class G3DCamera
     {
-        public enum Mode
-        {
-            Normal,
-        }
-        Mode mode = Mode.Normal;
+        //public enum Mode
+        //{
+        //    Normal,
+        //}
+        //Mode mode = Mode.Normal;
 
         // 最終値
         DX.VECTOR camera_pos;

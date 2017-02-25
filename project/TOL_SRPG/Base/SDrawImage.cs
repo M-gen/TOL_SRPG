@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using DxLibDLL;
 
-namespace DxlibGame
+namespace TOL_SRPG.Base
 {
     public class SIPoint
     {

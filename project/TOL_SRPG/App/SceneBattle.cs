@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DxLibDLL;
-using DxlibGame;
-using DxlibGame.Base;
+using TOL_SRPG.Base;
 
 // 戦闘シーンを管理する
-namespace DxlibGameSimRPG
+namespace TOL_SRPG.App
 {
     public class Scene : IDisposable
     {
@@ -709,23 +708,22 @@ namespace DxlibGameSimRPG
     public class ActionBattleStart : Action
     {
         public int timer = 0;
-        int damage_value = 50;
 
         SFont font;
 
         //int add_y = -100;
         //int add_y_speed = 100;
-        int add_y = 0;
-        int add_y_speed = -50;
-
-        int ox = 0;
-        int oy = 0;
+        //int add_y = 0;
+        //int add_y_speed = -50;
+        //
+        //int ox = 0;
+        //int oy = 0;
         int timer_start_wait = 0;
 
 
         public ActionBattleStart(int start_wait)
         {
-            ox = 0; oy = 0;
+            //ox = 0; oy = 0;
             this.timer_start_wait = start_wait;
 
             font = new SFont(GameMain.main_font_name_b, 45, 0, SFont.Antialiasing.Normal, 2);
