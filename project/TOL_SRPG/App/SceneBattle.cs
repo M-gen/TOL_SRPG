@@ -643,16 +643,19 @@ namespace TOL_SRPG.App
                     {
                         var x = t.GetInt(1);
                         var y = t.GetInt(2);
-                        var model_path = "data/model/" + t.GetString(3) + "/_.pmd";
-                        var image_face_path = "data/image/face/" + t.GetString(4);
-                        var name = t.GetString(5);
-                        var group = t.GetString(6);
-                        var color_no = t.GetInt(7);
-                        var direction = t.GetInt(8);
+                        var unit_class_name = t.GetString(3);
+                        var ucd = UnitDataManager.GetUnitClassData(unit_class_name);
+                        var model_path = t.GetString(4);
+                        var image_face_path = t.GetString(5);
+
+                        var name = t.GetString(6);
+                        var group = t.GetString(7);
+                        var color_no = t.GetInt(8);
+                        var direction = t.GetInt(9);
 
                         if ( !(is_continue_player_unit && group == "味方") )
                         {
-                            var unit = new Unit(model_path, image_face_path, name, x, y, color_no, direction);
+                            var unit = new Unit( unit_class_name, model_path, image_face_path, name, x, y, color_no, direction);
                             unit_manager.Join(unit, group);
                         }
 

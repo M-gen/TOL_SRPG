@@ -1,6 +1,8 @@
 
 def Setup
 	$ ClassName "ファイター"
+	$ DefaultImage "data/image/face/face_sammple.png"
+	$ DefaultModel "data/model/ch02/_.pmd"
 	$ HP   50 7
 	$ ATK  30 4
 	$ DEF  25 2

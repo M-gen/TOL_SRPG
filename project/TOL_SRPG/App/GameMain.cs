@@ -33,6 +33,7 @@ namespace TOL_SRPG.App
         public ActionManager action_manager = new ActionManager();
         public System.Random random = new System.Random();
         public STaskManager stask_manager = new STaskManager();
+        public UnitDataManager unit_data_manager = new UnitDataManager();
 
         bool is_use_shadowmap = true;
         public bool is_shadowmap_draw = false; // シャドウマップ中の描画かどうか

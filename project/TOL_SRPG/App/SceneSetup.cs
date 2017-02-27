@@ -71,20 +71,26 @@ namespace TOL_SRPG.App
                         var path = t.GetString(2);
                         SoundManager.ConectSound(key_name, path);
                     }
-                    break;
+                    return true;
                 case "ConectOnePointModel":
                     {
                         var key_name = t.GetString(1);
                         var path = t.GetString(2);
                         ModelManager.ConectOnePointModel(key_name, path);
                     }
-                    break;
+                    return true;
                 case "SetupActionData":
                     {
                         var path = t.GetString(1);
                         ActionDataManager.SetupActionData( path);
                     }
-                    break;
+                    return true;
+                case "SetupClassData":
+                    {
+                        var path = t.GetString(1);
+                        UnitDataManager.AddClassData(path);
+                    }
+                    return true;
                 case "DebugMode":
                     switch (t.GetString(1))
                     {
@@ -96,43 +102,7 @@ namespace TOL_SRPG.App
                             game_main.user_interface.SetMode(UserInterface.Mode.NonePlayerTurn, game_main.game_base.input.mouse_sutatus.position);
                             return true;
                     }
-                    break;
-                //case "MapSetup":
-                //    {
-                //        setup_script_data.map_h = setup_script_data.map_data.Count() / setup_script_data.map_w;
-                //        g3d_map.map_w = setup_script_data.map_w;
-                //        g3d_map.map_h = setup_script_data.map_h;
-
-                //        g3d_map.Setup(setup_script_data.map_data.ToArray());
-
-                //    }
-                //    break;
-                case "Unit":
-                    {
-                        var x = t.GetInt(1);
-                        var y = t.GetInt(2);
-                        var model_path = "data/model/" + t.GetString(3) + "/_.pmd";
-                        var image_face_path = "data/image/face/" + t.GetString(4);
-                        var name = t.GetString(5);
-                        var group = t.GetString(6);
-                        var color_no = t.GetInt(7);
-                        var direction = t.GetInt(8);
-                        var unit = new Unit(model_path, image_face_path, name, x, y, color_no, direction);
-                        unit_manager.Join(unit, group);
-
-                    }
-                    //unit_manager.Join(new Unit(path, 3, 5, 1, 0), "敵");
                     return true;
-                    //case "DebugMode":
-                    //    if (t.GetString(1) == "True")
-                    //    {
-                    //        is_debug_mode = true;
-                    //    }
-                    //    else
-                    //    {
-                    //        is_debug_mode = false;
-                    //    }
-                    //    break;
             }
             return false;
         }

@@ -6,9 +6,9 @@ def Setup
 	MapData 3 3 3 3 3
 	MapSetup
 
-	Unit 1 0 "ch01" "face_m3.png" "ドーナッツ"  "味方" 0 2
-	Unit 2 0 "ch02" "face_sammple.png" "コミニ"      "味方" 0 2
-	Unit 3 0 "ch03" "face_m1.png"      "ハーゲン"    "味方" 0 2
-	Unit 2 2 "ch04" "face_m2.png" "フランツォ"  "味方" 0 2
+	Unit 1 0 "ピープル"   "" "" "ドーナッツ"  "味方" 0 2
+	Unit 2 0 "ファイター" "" "" "コミニ"      "味方" 0 2
+	Unit 3 0 "アーチャー" "" "" "ハーゲン"    "味方" 0 2
+	Unit 2 2 "ウィザード" "" "" "フランツォ"  "味方" 0 2
 
 	// DebugMode "True"

@@ -6,15 +6,3 @@ def Setup
 	// カラー設定
 	SetColorChange 0 1 "uv_ch3_01.png"
 	SetColorChange 1 1 "uv_ch3_02.png"
-
-def Status
-	$ ClassName "アーチャー"
-	$ HP   45 5
-	$ ATK  25 5
-	$ DEF  15 2
-	$ MGK  10 1
-	$ MOVE  4 0
-	$ JUMP  3 0
-	$ WT   78 0
-	$ Action "Basic／攻撃／弓" 100
-	$ ExpBonus 120

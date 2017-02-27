@@ -1,6 +1,8 @@
 
 def Setup
 	$ ClassName "アーチャー"
+	$ DefaultImage "data/image/face/face_m1.png"
+	$ DefaultModel "data/model/ch03/_.pmd"
 	$ HP   45 5
 	$ ATK  25 5
 	$ DEF  15 2

@@ -329,13 +329,20 @@ namespace TOL_SRPG.App
                     {
                         var x = t.GetInt(1);
                         var y = t.GetInt(2);
-                        var model_path = "data/model/" + t.GetString(3) + "/_.pmd";
-                        var image_face_path = "data/image/face/" + t.GetString(4);
-                        var name = t.GetString(5);
-                        var group = t.GetString(6);
-                        var color_no = t.GetInt(7);
-                        var direction = t.GetInt(8);
-                        var unit = new Unit(model_path, image_face_path, name, x, y, color_no, direction);
+                        var unit_class_name = t.GetString(3);
+                        var ucd = UnitDataManager.GetUnitClassData(unit_class_name);
+                        var model_path = "data/model/" + t.GetString(4) + "/_.pmd";
+                        var image_face_path = "data/image/face/" + t.GetString(5);
+
+                        // 下記のifはUnitのコンストラクタで処理しても良い？
+                        if (t.GetString(4) == "") model_path = ucd.model_default_path;
+                        if (t.GetString(5) == "") image_face_path = ucd.image_default_path;
+
+                        var name = t.GetString(6);
+                        var group = t.GetString(7);
+                        var color_no = t.GetInt(8);
+                        var direction = t.GetInt(9);
+                        var unit = new Unit(unit_class_name, model_path, image_face_path, name, x, y, color_no, direction);
                         unit_manager.Join(unit, group);
 
                     }

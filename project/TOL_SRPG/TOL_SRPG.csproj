@@ -59,6 +59,7 @@
     <Compile Include="App\SceneSetup.cs" />
     <Compile Include="App\Script.cs" />
     <Compile Include="App\Unit.cs" />
+    <Compile Include="App\UnitData.cs" />
     <Compile Include="App\UserInterface.cs" />
     <Compile Include="Base\DxDLL.cs" />
     <Compile Include="Base\Form1.cs">

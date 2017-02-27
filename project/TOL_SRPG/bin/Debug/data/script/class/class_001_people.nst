@@ -1,6 +1,8 @@
 
 def Setup
 	$ ClassName "ピープル"
+	$ DefaultImage "data/image/face/face_m3.png"
+	$ DefaultModel "data/model/ch01/_.pmd"
 	$ HP   40 7
 	$ ATK  25 3
 	$ DEF  15 2

@@ -24,10 +24,15 @@ def Setup
 	SetupActionData "data/script/action/action_002_atk_arrow.nst"
 	SetupActionData "data/script/action/action_003_atk_magic_heatboil.nst"
 
+	SetupClassData "data/script/class/class_001_people.nst"
+	SetupClassData "data/script/class/class_002_fighter.nst"
+	SetupClassData "data/script/class/class_003_archer.nst"
+	SetupClassData "data/script/class/class_004_wizard.nst"
+
 	// DebugMode "UI"
 	// DebugMode "Auto"
 	
 	// シーンのセットアップ
-	SetupScene Battle "data/script/stage_0.nst"
-	//SetupScene PreBattle "data/script/pre_battle.nst" "data/script/stage_0.nst"
+	SetupScene PreBattle "data/script/pre_battle.nst" "data/script/stage_0.nst"
+	//SetupScene Battle "data/script/stage_0.nst"
 

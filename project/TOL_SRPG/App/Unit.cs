@@ -67,11 +67,15 @@ namespace TOL_SRPG.App
 
         string last_motion_key = "";
 
-        public Unit( string model_path, string image_face_path, string name, int map_x, int map_y, int color_no = 0, int direction = 2 )
+        public Unit(string class_name, string model_path, string image_face_path, string name, int map_x, int map_y, int color_no = 0, int direction = 2 )
         {
-            model = new G3DModel(model_path);
-            //model.AddMotion( 0, 0.16666f * 2.00f );
+            bt.class_name = class_name;
+            Setup();
+            var ucd = UnitDataManager.GetUnitClassData(bt.class_name);
+            if (model_path == "")      model_path = ucd.model_default_path;
+            if (image_face_path == "") image_face_path = ucd.image_default_path;
 
+            model = new G3DModel(model_path);
             image_face = DX.LoadGraph(image_face_path);
 
             this.name = name;
@@ -79,7 +83,7 @@ namespace TOL_SRPG.App
 
             script = new Script(model.model_root_dir + "system.nst", _ScriptLineAnalyze);
             script.Run("Setup");
-            script.Run("Status");
+            //script.Run("Status");
 
             SetMotion("歩行");
             Move(map_x, map_y,true);
@@ -89,6 +93,24 @@ namespace TOL_SRPG.App
             if ( color_no!=0 )
             {
                 SetColor(color_no);
+            }
+        }
+
+        private void Setup()
+        {
+            var ucd = UnitDataManager.GetUnitClassData(bt.class_name);
+            foreach( var st in ucd.status)
+            {
+                var bts = new BTS(st.Value.default_value);
+                bt.status.Add(st.Key, bts);
+            }
+            foreach( var ad in ucd.actions)
+            {
+                var a = new ActionStatus();
+                a.system_name = ad.system_name;
+                a.reflect_point = ad.reflect_point;
+                bt.actions.Add(a);
+
             }
         }
 
@@ -175,28 +197,6 @@ namespace TOL_SRPG.App
         {
             switch( t.command[0] )
             {
-                case "$":
-                    {
-                        switch (t.command[1])
-                        {
-                            case "ClassName":
-                                bt.class_name = t.GetString(2);
-                                return true;
-                            case "Action":
-                                {
-                                    var a = new ActionStatus();
-                                    a.system_name = t.GetString(2);
-                                    a.reflect_point = t.GetInt(3);
-                                    bt.actions.Add(a);
-                                }
-                                return true;
-                            default:
-                                var bts = new BTS(t.GetInt(2));
-                                bt.status.Add(t.command[1], bts);
-                                return true;
-                        }
-                    }
-                    //break;
                 case "SetColorChange":
                     {
                         var color_no       = t.GetInt(1);

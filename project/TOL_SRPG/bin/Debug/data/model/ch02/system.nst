@@ -7,15 +7,3 @@ def Setup
 	SetColorChange 0 1 "uv_ch3_戦士_02.png"
 	SetColorChange 1 1 "uv_ch3_戦士_02_s2.png"
 
-def Status
-	$ ClassName "ファイター"
-	$ HP   50 7
-	$ ATK  30 4
-	$ DEF  25 2
-	$ MGK   5 1
-	$ MOVE  4 0
-	$ JUMP  2 0
-	$ WT   83 0
-	$ Action "Basic／攻撃／剣" 100
-	$ ExpBonus 120
-
