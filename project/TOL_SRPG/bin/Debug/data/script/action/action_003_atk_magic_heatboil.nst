@@ -5,9 +5,9 @@ def Setup
 	$ Type        "攻撃"
 	$ Range 2 3 "遠直" "範囲内"
 	$ EffectValue "MGK" 100 0 5 0 "MGK" 5
-	InstantEffect "Sound"   0 "共通" "戦闘／攻撃／剣・開始" 50
-	InstantEffect "Sound"  20 "成功" "戦闘／攻撃／剣・終了" 50
-	InstantEffect "Sound"  20 "失敗" "戦闘／攻撃／剣・失敗" 50
-	InstantEffect "Damage" 20
+	// InstantEffect "Sound"   0 "共通" "戦闘／攻撃／剣・開始" 50
+	// InstantEffect "Sound"  20 "成功" "戦闘／攻撃／剣・終了" 50
+	// InstantEffect "Sound"  20 "失敗" "戦闘／攻撃／剣・失敗" 50
+	// InstantEffect "Damage" 20
 
 
