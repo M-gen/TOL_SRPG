@@ -11,15 +11,14 @@ using TOL_SRPG.Base;
 
 namespace TOL_SRPG.App
 {
-    // 地形データ
-    public class MapGroundMaterial : IDisposable
+    // 画像をつかう素材データ
+    public class MapImageMaterial : IDisposable
     {
         public string key;
         public string image_path;
-        //public string model_path = "";
         public int image_handle = -1;
 
-        public MapGroundMaterial(string key, string image_path)
+        public MapImageMaterial(string key, string image_path)
         {
             this.key = key;
             this.image_path = image_path;
@@ -27,39 +26,110 @@ namespace TOL_SRPG.App
             image_handle = DX.LoadGraph(image_path);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
-            if (image_handle!=-1)
+            if (image_handle != -1)
             {
                 DX.DeleteGraph(image_handle);
             }
         }
     }
 
-    public class MapMaterialManager
+    // 壁面データ
+    public class MapWallMaterial : MapImageMaterial
     {
+        public MapWallMaterial(string key, string image_path) : base(key, image_path)
+        {
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
+    }
+
+    // 地形データ
+    public class MapGroundMaterial : MapImageMaterial
+    {
+        public MapGroundMaterial(string key, string image_path) : base(key, image_path)
+        {
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
+    }
+
+    // 素材管理
+    public class MapMaterialManager : IDisposable
+    {
+        
         public Dictionary<string, MapGroundMaterial> ground_materials = new Dictionary<string, MapGroundMaterial>();
+        public Dictionary<string, MapWallMaterial> wall_materials = new Dictionary<string, MapWallMaterial>();
 
         public MapMaterialManager()
         {
 
         }
 
-        public MapGroundMaterial AddGroundMaterial( string key, string image_path )
+        public MapGroundMaterial AddGroundMaterial(string key, string image_path)
         {
-            var gm = new MapGroundMaterial(key,image_path);
-            ground_materials.Add(key,gm);
+            var gm = new MapGroundMaterial(key, image_path);
+            ground_materials.Add(key, gm);
             return gm;
         }
+
+        public MapWallMaterial AddWallMaterial(string key, string image_path)
+        {
+            var wm = new MapWallMaterial(key, image_path);
+            wall_materials.Add(key, wm);
+            return wm;
+        }
+
+        public void Dispose()
+        {
+            foreach (var v in ground_materials) v.Value.Dispose();
+            foreach (var v in wall_materials)   v.Value.Dispose();
+        }
     }
-
-
+    
     public class Square
     {
-        public int height;
-        public int[] under = new int[4]; // 周囲側面を作る必要があるかどうかと、その長さ
+        const int WALL_DIRECTION = 4;
 
+        public int height;
+        public int[] under = new int[WALL_DIRECTION]; // 周囲側面を作る必要があるかどうかと、その長さ
+
+        public List<MapWallMaterial>[] wall_matelals;
         public MapGroundMaterial ground_material = null;
+
+        public Square()
+        {
+            wall_matelals = new List<MapWallMaterial>[WALL_DIRECTION];
+            for (var i=0; i< WALL_DIRECTION; i++)
+            {
+                wall_matelals[i] = new List<MapWallMaterial>();
+            }
+        }
+
+        public void Setup( MapMaterialManager material_manager, string wall_default_material_key )
+        {
+            // 壁をデフォルトで初期化する
+            var wdm = material_manager.wall_materials[wall_default_material_key];
+            var i = 0;
+            foreach( var wms in wall_matelals)
+            {
+                wms.Clear();
+                var h = under[i];
+                for( var j=0; j<h; j++)
+                {
+                    wms.Add(wdm);
+                }
+                i++;
+            }
+
+        }
 
     }
 
@@ -86,8 +156,6 @@ namespace TOL_SRPG.App
             2,2,2,2,2,2,2,2,2,2,2,2,
         };
 
-        int map_image_chips = 0;
-        int map_image_chips_ground = 0;
         int map_image_chips_wall   = 0; // 壁面
         public Square[] map_squares;
         public RangeAreaMove         move_area;
@@ -109,22 +177,23 @@ namespace TOL_SRPG.App
         {
             this.game_base = game_base;
 
+            material_manager.AddGroundMaterial("", "data/image/map/ground_01_01.png"); // ダミー
             material_manager.AddGroundMaterial("平原_01", "data/image/map/ground_01_01.png");
             material_manager.AddGroundMaterial("土_01", "data/image/map/ground_02_01.png");
             material_manager.AddGroundMaterial("石_01", "data/image/map/ground_03_01.png");
             material_manager.AddGroundMaterial("白レンガ_01", "data/image/map/ground_04_01.png");
             material_manager.AddGroundMaterial("水_01", "data/image/map/ground_05_01.png");
 
-            map_image_chips = DX.LoadGraph("data/map.bmp");
-            //map_image_chips_ground = DX.LoadGraph("data/chip_01_.bmp");
-            //map_image_chips_ground = DX.LoadGraph("data/image/map/base_02_01.png");
-            map_image_chips_ground = DX.LoadGraph("data/image/map/ground_01_01.png");
-            //map_image_chips_wall = DX.LoadGraph("data/wall_01_.bmp");
+            material_manager.AddWallMaterial("", "data/image/map/wall_01_01.png"); // ダミー
+            material_manager.AddWallMaterial("土_01", "data/image/map/wall_01_01.png");
+            material_manager.AddWallMaterial("土_02", "data/image/map/wall_01_02.png");
+            material_manager.AddWallMaterial("白レンガ_01", "data/image/map/wall_02_01.png");
+
             map_image_chips_wall = DX.LoadGraph("data/image/map/wall_01_01.png");
 
             model_cursor_turn_owner = new G3DModel("data/model/action_items/cursor_turn_owner.pmd");
             
-            Setup(layer_0_ground);
+            Setup(layer_0_ground, "土_01");
 
 
             SetMapGroundMaterial(1, 1, "土_01");
@@ -137,9 +206,11 @@ namespace TOL_SRPG.App
             SetMapGroundMaterial(4, 2, "白レンガ_01");
             SetMapGroundMaterial(4, 3, "白レンガ_01");
             SetMapGroundMaterial(5, 3, "水_01");
+            SetMapGroundMaterial(6, 3, "水_01");
+            SetMapGroundMaterial(7, 3, "水_01");
         }
 
-        public void Setup( int[] layer_0_ground )
+        public void Setup( int[] layer_0_ground, string wall_default_material_key = "")
         {
             map_squares = new Square[map_w * map_h];
             for (int i = 0; i < map_w * map_h; i++)
@@ -152,6 +223,11 @@ namespace TOL_SRPG.App
             action_target_area = new RangeAreaActionTarget(map_w, map_h);
 
             UpdateLayer();
+
+            for (int i = 0; i < map_w * map_h; i++)
+            {
+                map_squares[i].Setup(material_manager, wall_default_material_key);
+            }
         }
 
         public void UpdateLayer()
@@ -343,10 +419,14 @@ namespace TOL_SRPG.App
                     var height = sq.height;
 
                     // 頂上のスクウェアを描画
-                    var handle = map_image_chips_ground;
+                    var handle = 0;
                     if ( sq.ground_material!=null && sq.ground_material.image_path != "" )
                     {
                         handle = sq.ground_material.image_handle;
+                    }
+                    else
+                    {
+                        sq.ground_material = material_manager.ground_materials[""]; // ダミー
                     }
                     DrawSpriteXZ(x*10.0f, height*HIGHT_ONE_VALUE, y*10.0f, 10, 10, handle, 0, 0, 32, 32, 32);
 
@@ -400,7 +480,8 @@ namespace TOL_SRPG.App
                             for ( int hv = 0; hv< sq.under[j]; hv++)
                             {
                                 var h_now = 3-(h_under + hv) % 4; // 2.5で、画像チップの四分の一の高さとする、そのいちを決める
-                                DrawSpriteWall(j, vx, (height+hv) * HIGHT_ONE_VALUE - h, vy, 10, HIGHT_ONE_VALUE, map_image_chips_wall, 0, h_now*8, 32, 8, 32);
+                                var wm = sq.wall_matelals[j][hv];
+                                DrawSpriteWall(j, vx, (height+hv) * HIGHT_ONE_VALUE - h, vy, 10, HIGHT_ONE_VALUE, wm.image_handle, 0, h_now*8, 32, 8, 32);
                             }
                         }
                     }
@@ -414,9 +495,6 @@ namespace TOL_SRPG.App
                 model_cursor_turn_owner.Draw();
             }
 
-            //DrawSpriteXZ(0, 0, 0, 10, 10, map_image_chips, 32*13, 0, 32, 32, 512);
-            //DrawSpriteXZ(10, 2.5f, 0, 10, 10, map_image_chips, 32*12, 0, 32, 32, 512);
-            //DrawSpriteXZ(20, 0, 0, 10, 10, map_image_chips, 32*14, 0, 32, 32, 512);
         }
 
         void DrawSpriteXZ( float x, float y, float z, float w, float h, int image, int uv_x, int uv_y, int uv_w, int uv_h, int image_wh_size  )
@@ -474,7 +552,6 @@ namespace TOL_SRPG.App
                     break;
             }
             SetupV4(ref v4, uv_x, uv_y, uv_w, uv_h, image_wh_size);
-
 
             DX.DrawPolygon3D(out v4[0], 2, image, 0);
         }
