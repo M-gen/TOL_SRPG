@@ -11,14 +11,56 @@ using TOL_SRPG.Base;
 
 namespace TOL_SRPG.App
 {
+    // 地形データ
+    public class MapGroundMaterial : IDisposable
+    {
+        public string key;
+        public string image_path;
+        //public string model_path = "";
+        public int image_handle = -1;
+
+        public MapGroundMaterial(string key, string image_path)
+        {
+            this.key = key;
+            this.image_path = image_path;
+
+            image_handle = DX.LoadGraph(image_path);
+        }
+
+        public void Dispose()
+        {
+            if (image_handle!=-1)
+            {
+                DX.DeleteGraph(image_handle);
+            }
+        }
+    }
+
+    public class MapMaterialManager
+    {
+        public Dictionary<string, MapGroundMaterial> ground_materials = new Dictionary<string, MapGroundMaterial>();
+
+        public MapMaterialManager()
+        {
+
+        }
+
+        public MapGroundMaterial AddGroundMaterial( string key, string image_path )
+        {
+            var gm = new MapGroundMaterial(key,image_path);
+            ground_materials.Add(key,gm);
+            return gm;
+        }
+    }
+
+
     public class Square
     {
         public int height;
         public int[] under = new int[4]; // 周囲側面を作る必要があるかどうかと、その長さ
 
-        // 移動エリア系
-        //public bool is_move_area_effect = false; // 移動範囲エフェクト
-        //public int move_step_count = 0; //歩数
+        public MapGroundMaterial ground_material = null;
+
     }
 
     public class G3DMap
@@ -26,13 +68,14 @@ namespace TOL_SRPG.App
         const float HIGHT_ONE_VALUE = 2.5f;
 
         GameBase game_base;
+        MapMaterialManager material_manager = new MapMaterialManager();
 
         public int map_w = 12;
         public int map_h = 10;
         int[] layer_0_ground = {
-            0,0,1,1,1,1,1,1,1,1,1,1, // 0
-            0,0,1,1,1,1,1,1,1,1,1,1,
-            0,2,2,2,2,2,2,2,2,2,2,2,
+            2,2,2,2,1,1,1,1,1,1,1,1, // 0
+            2,2,2,2,1,1,1,1,1,1,1,1,
+            2,2,2,2,2,2,2,2,2,2,2,2,
             2,2,2,2,2,2,2,2,2,2,2,2,
             2,2,2,2,2,2,2,2,2,2,2,2, // 4
             2,2,2,2,2,2,2,2,2,2,2,2,
@@ -66,14 +109,34 @@ namespace TOL_SRPG.App
         {
             this.game_base = game_base;
 
+            material_manager.AddGroundMaterial("平原_01", "data/image/map/ground_01_01.png");
+            material_manager.AddGroundMaterial("土_01", "data/image/map/ground_02_01.png");
+            material_manager.AddGroundMaterial("石_01", "data/image/map/ground_03_01.png");
+            material_manager.AddGroundMaterial("白レンガ_01", "data/image/map/ground_04_01.png");
+            material_manager.AddGroundMaterial("水_01", "data/image/map/ground_05_01.png");
+
             map_image_chips = DX.LoadGraph("data/map.bmp");
-            map_image_chips_ground = DX.LoadGraph("data/chip_01_.bmp");
-            map_image_chips_wall   = DX.LoadGraph("data/wall_01_.bmp");
+            //map_image_chips_ground = DX.LoadGraph("data/chip_01_.bmp");
+            //map_image_chips_ground = DX.LoadGraph("data/image/map/base_02_01.png");
+            map_image_chips_ground = DX.LoadGraph("data/image/map/ground_01_01.png");
+            //map_image_chips_wall = DX.LoadGraph("data/wall_01_.bmp");
+            map_image_chips_wall = DX.LoadGraph("data/image/map/wall_01_01.png");
 
             model_cursor_turn_owner = new G3DModel("data/model/action_items/cursor_turn_owner.pmd");
-
-
+            
             Setup(layer_0_ground);
+
+
+            SetMapGroundMaterial(1, 1, "土_01");
+            SetMapGroundMaterial(1, 2, "土_01");
+            SetMapGroundMaterial(2, 1, "土_01");
+            SetMapGroundMaterial(2, 2, "土_01");
+            SetMapGroundMaterial(3, 1, "石_01");
+            SetMapGroundMaterial(3, 2, "石_01");
+            SetMapGroundMaterial(4, 1, "白レンガ_01");
+            SetMapGroundMaterial(4, 2, "白レンガ_01");
+            SetMapGroundMaterial(4, 3, "白レンガ_01");
+            SetMapGroundMaterial(5, 3, "水_01");
         }
 
         public void Setup( int[] layer_0_ground )
@@ -280,13 +343,16 @@ namespace TOL_SRPG.App
                     var height = sq.height;
 
                     // 頂上のスクウェアを描画
-                    DrawSpriteXZ(x*10.0f, height*HIGHT_ONE_VALUE, y*10.0f, 10, 10, map_image_chips_ground, 0, 0, 32, 32, 32);
+                    var handle = map_image_chips_ground;
+                    if ( sq.ground_material!=null && sq.ground_material.image_path != "" )
+                    {
+                        handle = sq.ground_material.image_handle;
+                    }
+                    DrawSpriteXZ(x*10.0f, height*HIGHT_ONE_VALUE, y*10.0f, 10, 10, handle, 0, 0, 32, 32, 32);
 
                     // カーソル描画
                     if (x == map_cursor_x && y == map_cursor_y)
                     {
-                        //DX.SetMaterialUseVertDifColor(DX.TRUE);
-                        //DX.SetMaterialUseVertSpcColor(DX.FALSE);
                         dif_color = DX.GetColorU8(255, 0, 0, 128);
                         DrawSpriteXZ(x * 10.0f, height * HIGHT_ONE_VALUE + 0.01f, y * 10.0f, 10, 10, DX.DX_NONE_GRAPH, 0, 0, 32, 32, 32);
                         dif_color = DX.GetColorU8(255, 255, 255, 255);
@@ -521,5 +587,15 @@ namespace TOL_SRPG.App
             //    model_cursor_turn_owner.Pos(x, y, z);
             //}
         }
+
+        public void SetMapGroundMaterial( int x, int y, string key )
+        {
+            var p = x + y * map_w;
+            var sq = map_squares[p];
+
+            var gm = material_manager.ground_materials[key];
+            sq.ground_material = gm;
+        }
+
     }
 }

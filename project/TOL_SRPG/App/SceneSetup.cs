@@ -57,9 +57,17 @@ namespace TOL_SRPG.App
                             return true;
                         case "PreBattle":
                             {
-                                var script_path_pre  = t.GetString(2);
+                                var script_path_pre = t.GetString(2);
                                 var script_path_main = t.GetString(3);
                                 var scene = new ScenePreBattle(script_path_pre, script_path_main);
+                                game_main.NextScene(scene);
+                            }
+                            return true;
+                        case "CreateMap":
+                            {
+                                //var script_path_pre = t.GetString(2);
+                                //var script_path_main = t.GetString(3);
+                                var scene = new SceneCreateMap();
                                 game_main.NextScene(scene);
                             }
                             return true;

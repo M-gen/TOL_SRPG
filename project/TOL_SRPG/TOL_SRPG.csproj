@@ -54,6 +54,9 @@
     <Compile Include="App\GameMain.cs" />
     <Compile Include="App\RangeArea.cs" />
     <Compile Include="App\SceneBattle.cs" />
+    <Compile Include="App\SceneCreateMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="App\SceneEndBattle.cs" />
     <Compile Include="App\ScenePreBattle.cs" />
     <Compile Include="App\SceneSetup.cs" />

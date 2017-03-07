@@ -79,9 +79,6 @@ namespace TOL_SRPG.App
             NextUnitTurn();
 
 
-            model_arrow = new G3DModel("data/model/action_items/shoot_arrow_b.pmd");
-            model_arrow.AddMotion(0, 0.333f);
-            model_arrow.Pos(10.0f, 10.0f, 10.0f);
 
             ActionManager.Add(new ActionBattleStart(0));
         }
@@ -101,7 +98,6 @@ namespace TOL_SRPG.App
                 CheckGameEnd();
             }
 
-            model_arrow.Update();
         }
 
         public override void Draw(bool is_shadowmap)
@@ -113,7 +109,6 @@ namespace TOL_SRPG.App
                 game_main.g3d_map.Draw();
                 game_main.unit_manager.Draw();
                 game_main.action_manager.Draw();
-                model_arrow.Draw();
             }
             else
             {
@@ -121,7 +116,6 @@ namespace TOL_SRPG.App
                 game_main.unit_manager.Draw();
                 game_main.action_manager.Draw();
                 game_main.user_interface.Draw();
-                model_arrow.Draw();
             }
 
         }
