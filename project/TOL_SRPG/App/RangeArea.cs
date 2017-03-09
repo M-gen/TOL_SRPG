@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
+using TOL_SRPG.App.Map;
+
 namespace TOL_SRPG.App
 {
     // 距離から算出されるエリアについての処理群
@@ -171,7 +173,7 @@ namespace TOL_SRPG.App
         static int _RangeCalcGetHeight(int map_x, int map_y, object obj)
         {
             if (obj == null) return 0;
-            var g3d_map = (G3DMap)obj;
+            var g3d_map = (BattleMap)obj;
 
             return g3d_map.map_squares[map_x + map_y * g3d_map.map_w].height;
         }

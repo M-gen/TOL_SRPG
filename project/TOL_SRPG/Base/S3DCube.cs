@@ -76,6 +76,7 @@ namespace TOL_SRPG.Base
     {
         S3DPoint pos;
         SDPoint size;
+        int image_handle = -1;
 
         // 向いている方向
         public enum Direction
@@ -87,6 +88,10 @@ namespace TOL_SRPG.Base
         Direction direction = Direction.Top;
 
         DX.COLOR_U8 dif_color;
+        DX.COLOR_U8 spc_color;
+
+        SDPoint uv_pos = new SDPoint(0, 0);
+        SDPoint uv_size = new SDPoint(32, 32);
 
         public S3DPanel(S3DPoint pos, SDPoint size, Direction direction = Direction.Top)
         {
@@ -95,6 +100,7 @@ namespace TOL_SRPG.Base
             this.direction = direction;
 
             dif_color = DX.GetColorU8(255,0,0,0);
+            spc_color = DX.GetColorU8(0,0,0,255);
         }
 
         public void SetColor( int a, int r, int g, int b )
@@ -102,9 +108,26 @@ namespace TOL_SRPG.Base
             dif_color = DX.GetColorU8(r, g, b, a);
         }
 
+        public void SetSpecularColor(int a, int r, int g, int b)
+        {
+            spc_color = DX.GetColorU8(r, g, b, a);
+        }
+
+        public void SetTexture( int image_handle )
+        {
+            this.image_handle = image_handle;
+        }
+
         public void Draw()
         {
-            DrawSprite(DX.DX_NONE_GRAPH, 0, 0, 32, 32, 32);
+            if (image_handle == -1)
+            {
+                DrawSprite(DX.DX_NONE_GRAPH, 0, 0, 32, 32, 32);
+            }
+            else
+            {
+                DrawSprite(image_handle, (int)uv_pos.x, (int)uv_pos.y, (int)uv_size.x, (int)uv_size.y, 32);
+            }
         }
 
         void GetDXVectors( out DX.VERTEX3D[] vectors )
@@ -175,12 +198,12 @@ namespace TOL_SRPG.Base
             v4[3].dif = dif_color;
             v4[4].dif = dif_color;
             v4[5].dif = dif_color;
-            v4[0].spc = DX.GetColorU8(0, 0, 0, 255);
-            v4[1].spc = DX.GetColorU8(0, 0, 0, 255);
-            v4[2].spc = DX.GetColorU8(0, 0, 0, 255);
-            v4[3].spc = DX.GetColorU8(0, 0, 0, 255);
-            v4[4].spc = DX.GetColorU8(0, 0, 0, 255);
-            v4[5].spc = DX.GetColorU8(0, 0, 0, 255);
+            v4[0].spc = spc_color;
+            v4[1].spc = spc_color;
+            v4[2].spc = spc_color;
+            v4[3].spc = spc_color;
+            v4[4].spc = spc_color;
+            v4[5].spc = spc_color;
 
             float u0 = (float)uv_x / (float)image_wh_size;
             float v0 = (float)uv_y / (float)image_wh_size;
@@ -238,6 +261,12 @@ namespace TOL_SRPG.Base
         public void SetSize(SDPoint size)
         {
             this.size = size;
+        }
+
+        public void SetUV( SDPoint pos, SDPoint size )
+        {
+            uv_pos = pos;
+            uv_size = size;
         }
     }
 

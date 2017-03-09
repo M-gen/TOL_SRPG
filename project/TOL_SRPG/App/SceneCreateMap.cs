@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using DxLibDLL;
 using TOL_SRPG.Base;
+using TOL_SRPG.App.Map;
 using System.Windows.Forms;
 using System.Drawing;
 
@@ -35,7 +36,7 @@ namespace TOL_SRPG.App
         {
             var game_main = GameMain.GetInstance();
 
-            game_main.g3d_map = new G3DMap(game_main.game_base);
+            game_main.g3d_map = new BattleMap(game_main.game_base);
             game_main.g3d_camera = new G3DCamera();
 
             tool_window = new FormCreateMapToolWindow();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using DxLibDLL;
 using TOL_SRPG.Base;
+using TOL_SRPG.App.Map;
 
 namespace TOL_SRPG.App
 {
@@ -28,7 +29,7 @@ namespace TOL_SRPG.App
         {
             this.next_battle_setup_script_path = next_battle_setup_script_path;
             var game_main = GameMain.GetInstance();
-            game_main.g3d_map = new G3DMap(game_main.game_base);
+            game_main.g3d_map = new BattleMap(game_main.game_base);
             game_main.g3d_camera = new G3DCamera();
 
             int[] map_data = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };

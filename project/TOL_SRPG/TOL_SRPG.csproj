@@ -49,9 +49,12 @@
     <Compile Include="App\Action.cs" />
     <Compile Include="App\ActionData.cs" />
     <Compile Include="App\BattleAI.cs" />
-    <Compile Include="App\G3DMap.cs" />
+    <Compile Include="App\Map\BattleMap.cs" />
     <Compile Include="App\G3DModel.cs" />
     <Compile Include="App\GameMain.cs" />
+    <Compile Include="App\Map\MapMaterial.cs" />
+    <Compile Include="App\Map\Square.cs" />
+    <Compile Include="App\Map\Wall.cs" />
     <Compile Include="App\RangeArea.cs" />
     <Compile Include="App\SceneBattle.cs" />
     <Compile Include="App\SceneCreateMap.cs">

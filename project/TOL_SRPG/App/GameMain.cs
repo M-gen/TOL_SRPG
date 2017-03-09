@@ -8,6 +8,7 @@ using System.Drawing;
 
 using DxLibDLL;
 using TOL_SRPG.Base;
+using TOL_SRPG.App.Map;
 
 namespace TOL_SRPG.App
 {
@@ -25,7 +26,7 @@ namespace TOL_SRPG.App
         ModelManager model_manager;
         ActionDataManager action_data_manager;
 
-        public G3DMap g3d_map;
+        public BattleMap g3d_map;
         public G3DCamera g3d_camera;
         public UserInterface user_interface;
         int ShadowMapHandle = 0;

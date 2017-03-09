@@ -9,133 +9,12 @@ using System.Drawing;
 using DxLibDLL;
 using TOL_SRPG.Base;
 
-namespace TOL_SRPG.App
+namespace TOL_SRPG.App.Map
 {
-    // 画像をつかう素材データ
-    public class MapImageMaterial : IDisposable
+    public class BattleMap
     {
-        public string key;
-        public string image_path;
-        public int image_handle = -1;
-
-        public MapImageMaterial(string key, string image_path)
-        {
-            this.key = key;
-            this.image_path = image_path;
-
-            image_handle = DX.LoadGraph(image_path);
-        }
-
-        public virtual void Dispose()
-        {
-            if (image_handle != -1)
-            {
-                DX.DeleteGraph(image_handle);
-            }
-        }
-    }
-
-    // 壁面データ
-    public class MapWallMaterial : MapImageMaterial
-    {
-        public MapWallMaterial(string key, string image_path) : base(key, image_path)
-        {
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-    }
-
-    // 地形データ
-    public class MapGroundMaterial : MapImageMaterial
-    {
-        public MapGroundMaterial(string key, string image_path) : base(key, image_path)
-        {
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-    }
-
-    // 素材管理
-    public class MapMaterialManager : IDisposable
-    {
-        
-        public Dictionary<string, MapGroundMaterial> ground_materials = new Dictionary<string, MapGroundMaterial>();
-        public Dictionary<string, MapWallMaterial> wall_materials = new Dictionary<string, MapWallMaterial>();
-
-        public MapMaterialManager()
-        {
-
-        }
-
-        public MapGroundMaterial AddGroundMaterial(string key, string image_path)
-        {
-            var gm = new MapGroundMaterial(key, image_path);
-            ground_materials.Add(key, gm);
-            return gm;
-        }
-
-        public MapWallMaterial AddWallMaterial(string key, string image_path)
-        {
-            var wm = new MapWallMaterial(key, image_path);
-            wall_materials.Add(key, wm);
-            return wm;
-        }
-
-        public void Dispose()
-        {
-            foreach (var v in ground_materials) v.Value.Dispose();
-            foreach (var v in wall_materials)   v.Value.Dispose();
-        }
-    }
-    
-    public class Square
-    {
-        const int WALL_DIRECTION = 4;
-
-        public int height;
-        public int[] under = new int[WALL_DIRECTION]; // 周囲側面を作る必要があるかどうかと、その長さ
-
-        public List<MapWallMaterial>[] wall_matelals;
-        public MapGroundMaterial ground_material = null;
-
-        public Square()
-        {
-            wall_matelals = new List<MapWallMaterial>[WALL_DIRECTION];
-            for (var i=0; i< WALL_DIRECTION; i++)
-            {
-                wall_matelals[i] = new List<MapWallMaterial>();
-            }
-        }
-
-        public void Setup( MapMaterialManager material_manager, string wall_default_material_key )
-        {
-            // 壁をデフォルトで初期化する
-            var wdm = material_manager.wall_materials[wall_default_material_key];
-            var i = 0;
-            foreach( var wms in wall_matelals)
-            {
-                wms.Clear();
-                var h = under[i];
-                for( var j=0; j<h; j++)
-                {
-                    wms.Add(wdm);
-                }
-                i++;
-            }
-
-        }
-
-    }
-
-    public class G3DMap
-    {
-        const float HIGHT_ONE_VALUE = 2.5f;
+        public const double SQUARE_SIZE = 10.0;
+        public const float HIGHT_ONE_VALUE = 2.5f;
 
         GameBase game_base;
         MapMaterialManager material_manager = new MapMaterialManager();
@@ -173,7 +52,7 @@ namespace TOL_SRPG.App
         float cursor_turn_owner_offset_y_timer = 0;
 
 
-        public G3DMap(GameBase game_base)
+        public BattleMap(GameBase game_base)
         {
             this.game_base = game_base;
 
@@ -195,7 +74,6 @@ namespace TOL_SRPG.App
             
             Setup(layer_0_ground, "土_01");
 
-
             SetMapGroundMaterial(1, 1, "土_01");
             SetMapGroundMaterial(1, 2, "土_01");
             SetMapGroundMaterial(2, 1, "土_01");
@@ -215,8 +93,10 @@ namespace TOL_SRPG.App
             map_squares = new Square[map_w * map_h];
             for (int i = 0; i < map_w * map_h; i++)
             {
-                map_squares[i] = new Square();
-                map_squares[i].height = layer_0_ground[i];
+                var map_x = i % map_w;
+                var map_y = i / map_w;
+
+                map_squares[i] = new Square(map_x, map_y, layer_0_ground[i]);
             }
 
             move_area = new RangeAreaMove(map_w, map_h);
@@ -390,25 +270,11 @@ namespace TOL_SRPG.App
                     cursor_turn_owner_unit = null;
                 }
             }
-            //if ( u==null)
-            //{
-            //    is_draw_cursor_turn_owner = false;
-            //}
-            //else
-            //{
-            //    is_draw_cursor_turn_owner = true;
-            //    float x=0.0f, y = 0.0f, z = 0.0f;
-            //    Get3DPos(u.map_x, u.map_y, ref x, ref y, ref z);
-            //    y += 20.0f;
-            //    model_cursor_turn_owner.Pos(x, y, z);
-            //}
 
         }
 
         public void Draw()
         {
-
-
             // 描画
             for( int x=0; x<map_w; x++ )
             {
@@ -419,16 +285,7 @@ namespace TOL_SRPG.App
                     var height = sq.height;
 
                     // 頂上のスクウェアを描画
-                    var handle = 0;
-                    if ( sq.ground_material!=null && sq.ground_material.image_path != "" )
-                    {
-                        handle = sq.ground_material.image_handle;
-                    }
-                    else
-                    {
-                        sq.ground_material = material_manager.ground_materials[""]; // ダミー
-                    }
-                    DrawSpriteXZ(x*10.0f, height*HIGHT_ONE_VALUE, y*10.0f, 10, 10, handle, 0, 0, 32, 32, 32);
+                    sq.Draw();
 
                     // カーソル描画
                     if (x == map_cursor_x && y == map_cursor_y)
@@ -459,31 +316,6 @@ namespace TOL_SRPG.App
                         dif_color = DX.GetColorU8(255, 0, 0, 128);
                         DrawSpriteXZ(x * 10.0f, height * HIGHT_ONE_VALUE + 0.01f, y * 10.0f, 10, 10, DX.DX_NONE_GRAPH, 0, 0, 32, 32, 32);
                         dif_color = DX.GetColorU8(255, 255, 255, 255);
-                    }
-
-                    // 壁面の描画
-                    for ( int j=0; j<4; j++)
-                    {
-                        if (sq.under[j] > 0)
-                        {
-                            var h = sq.under[j] * HIGHT_ONE_VALUE;
-                            var vx = x * 10.0f;
-                            var vy = y * 10.0f;
-                            switch (j)
-                            {
-                                case 1: vx = (x + 1) * 10.0f;                       break;
-                                case 2: vx = (x + 1) * 10.0f; vy = (y + 1) * 10.0f; break;
-                                case 3:                       vy = (y + 1) * 10.0f; break;
-                            }
-                            // 細かく2.5ずつ
-                            var h_under = height-sq.under[j]; // 壁面の一番下の高さ
-                            for ( int hv = 0; hv< sq.under[j]; hv++)
-                            {
-                                var h_now = 3-(h_under + hv) % 4; // 2.5で、画像チップの四分の一の高さとする、そのいちを決める
-                                var wm = sq.wall_matelals[j][hv];
-                                DrawSpriteWall(j, vx, (height+hv) * HIGHT_ONE_VALUE - h, vy, 10, HIGHT_ONE_VALUE, wm.image_handle, 0, h_now*8, 32, 8, 32);
-                            }
-                        }
                     }
 
                 }

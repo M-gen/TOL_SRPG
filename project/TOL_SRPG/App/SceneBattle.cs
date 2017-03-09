@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using DxLibDLL;
 using TOL_SRPG.Base;
+using TOL_SRPG.App.Map;
 
 // 戦闘シーンを管理する
 namespace TOL_SRPG.App
@@ -50,7 +51,6 @@ namespace TOL_SRPG.App
         bool is_continue_player_unit = false;
         UserInterface.Command select_command = null;
 
-        G3DModel model_arrow;
         BattleAI battle_ai = null;
         bool is_battle_end_check = true; // 戦闘中 → 勝利・敗北の判定を行うかどうか
 
@@ -68,7 +68,7 @@ namespace TOL_SRPG.App
 
             var game_main = GameMain.GetInstance();
 
-            game_main.g3d_map = new G3DMap(game_main.game_base);
+            game_main.g3d_map = new BattleMap(game_main.game_base);
             game_main.g3d_camera = new G3DCamera();
             setup_script = new Script(script_path, _ScriptLineAnalyze);
             setup_script.Run("Setup");
