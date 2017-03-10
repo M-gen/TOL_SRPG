@@ -110,5 +110,10 @@ namespace TOL_SRPG.App.Map
 
         }
 
+        public HitStatus CheckHitGround(S3DLine line)
+        {
+            return top_ground.CheckHit(line);
+        }
+
     }
 }

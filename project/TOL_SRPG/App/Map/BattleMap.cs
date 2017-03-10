@@ -17,7 +17,7 @@ namespace TOL_SRPG.App.Map
         public const float HIGHT_ONE_VALUE = 2.5f;
 
         GameBase game_base;
-        MapMaterialManager material_manager = new MapMaterialManager();
+        public MapMaterialManager material_manager = new MapMaterialManager();
 
         public int map_w = 12;
         public int map_h = 10;
@@ -174,44 +174,20 @@ namespace TOL_SRPG.App.Map
             DX.HITRESULT_LINE l1, l2;
             map_cursor_x = -1;
             map_cursor_y = -1;
+            var mouse_lay = S3DLine.GetMouseLay();
+            HitStatus ground_hit_status = null;
             for (int x = 0; x < map_w; x++)
             {
                 for (int y = 0; y < map_h; y++)
                 {
                     var sq = map_squares[x + y * map_w];
-                    var height = sq.height;
-                    float vx = x * 10.0f;
-                    float vz = y * 10.0f;
-                    float vy = height * HIGHT_ONE_VALUE;
-                    float vwh = 10f;
+                    var hs = sq.CheckHitGround(mouse_lay);
 
-                    // 三角ポリゴン2つで矩形と線分の判定の衝突判定をする
-                    l1 = DX.HitCheck_Line_Triangle(StartPos, EndPos, DX.VGet(vx, vy, vz), DX.VGet(vx + vwh, vy, vz), DX.VGet(vx, vy, vz + vwh));
-                    l2 = DX.HitCheck_Line_Triangle(StartPos, EndPos, DX.VGet(vx + vwh, vy, vz + vwh), DX.VGet(vx + vwh, vy, vz), DX.VGet(vx, vy, vz + vwh));
-
-                    if (l1.HitFlag == DX.TRUE)
+                    if ( (ground_hit_status==null || ground_hit_status.range > hs.range) && (hs.is_hit) )
                     {
-                        distance_tmp = (l1.Position.x - StartPos.x) * (l1.Position.x - StartPos.x) +
-                            (l1.Position.y - StartPos.y) * (l1.Position.y - StartPos.y) +
-                            (l1.Position.z - StartPos.z) * (l1.Position.z - StartPos.z);
-                        if (distance_now == -1 || distance_now > distance_tmp)
-                        {
-                            map_cursor_x = x;
-                            map_cursor_y = y;
-                            distance_now = distance_tmp;
-                        }
-                    }
-                    if (l2.HitFlag == DX.TRUE)
-                    {
-                        distance_tmp = (l2.Position.x - StartPos.x) * (l2.Position.x - StartPos.x) +
-                            (l2.Position.y - StartPos.y) * (l2.Position.y - StartPos.y) +
-                            (l2.Position.z - StartPos.z) * (l2.Position.z - StartPos.z);
-                        if (distance_now == -1 || distance_now > distance_tmp)
-                        {
-                            map_cursor_x = x;
-                            map_cursor_y = y;
-                            distance_now = distance_tmp;
-                        }
+                        ground_hit_status = hs;
+                        map_cursor_x = x;
+                        map_cursor_y = y;
                     }
                 }
             }
@@ -219,12 +195,12 @@ namespace TOL_SRPG.App.Map
             // ユニットのカーソル判定（こっちがあるなら上書きする）
             {
                 var game_main = GameMain.GetInstance();
-                var line = S3DLine.GetMouseLay();
+                //var line = S3DLine.GetMouseLay();
                 var range = 0.0;
                 Unit tmp_u = null;
                 foreach (var u in game_main.unit_manager.units)
                 {
-                    var hs = u.unit.CheckHit(line);
+                    var hs = u.unit.CheckHit(mouse_lay);
                     if (hs.is_hit)
                     {
                         if (tmp_u == null || range > hs.range)
