@@ -45,6 +45,7 @@ namespace TOL_SRPG.App.Map
         DX.COLOR_U8 dif_color = DX.GetColorU8(255, 255, 255, 255);
         public int map_cursor_x = 3;
         public int map_cursor_y = 3;
+        public Wall map_cursor_wall = null;
 
         G3DModel model_cursor_turn_owner;
         Unit cursor_turn_owner_unit = null;
@@ -159,37 +160,58 @@ namespace TOL_SRPG.App.Map
         public void UpdateInterface()
         {
             // カーソル状態更新
-            int mx, my;
-            float distance_now = -1f;
-            float distance_tmp = -1f;
-            DX.VECTOR StartPos, EndPos;
-            //DX.GetMousePoint(out mx, out my);
-            mx = game_base.input.mouse_sutatus.position.X;
-            my = game_base.input.mouse_sutatus.position.Y;
-            // マウスポインタがある画面上の座標に該当する３Ｄ空間上の Near 面の座標を取得
-            StartPos = DX.ConvScreenPosToWorldPos(DX.VGet(mx, my, 0.0f));
-            // マウスポインタがある画面上の座標に該当する３Ｄ空間上の Far 面の座標を取得
-            EndPos = DX.ConvScreenPosToWorldPos(DX.VGet(mx, my, 1.0f));
+            //int mx, my;
+            //float distance_now = -1f;
+            //float distance_tmp = -1f;
+            //DX.VECTOR StartPos, EndPos;
+            ////DX.GetMousePoint(out mx, out my);
+            //mx = game_base.input.mouse_sutatus.position.X;
+            //my = game_base.input.mouse_sutatus.position.Y;
+            //// マウスポインタがある画面上の座標に該当する３Ｄ空間上の Near 面の座標を取得
+            //StartPos = DX.ConvScreenPosToWorldPos(DX.VGet(mx, my, 0.0f));
+            //// マウスポインタがある画面上の座標に該当する３Ｄ空間上の Far 面の座標を取得
+            //EndPos = DX.ConvScreenPosToWorldPos(DX.VGet(mx, my, 1.0f));
 
-            DX.HITRESULT_LINE l1, l2;
             map_cursor_x = -1;
             map_cursor_y = -1;
             var mouse_lay = S3DLine.GetMouseLay();
+            
+            // 地面（表面）とのカーソル判定
             HitStatus ground_hit_status = null;
-            for (int x = 0; x < map_w; x++)
+            foreach( var sq in map_squares)
             {
-                for (int y = 0; y < map_h; y++)
-                {
-                    var sq = map_squares[x + y * map_w];
-                    var hs = sq.CheckHitGround(mouse_lay);
+                //var sq = map_squares[x + y * map_w];
+                var hs = sq.CheckHitGround(mouse_lay);
 
-                    if ( (ground_hit_status==null || ground_hit_status.range > hs.range) && (hs.is_hit) )
-                    {
-                        ground_hit_status = hs;
-                        map_cursor_x = x;
-                        map_cursor_y = y;
-                    }
+                if ((ground_hit_status == null || ground_hit_status.range > hs.range) && (hs.is_hit))
+                {
+                    ground_hit_status = hs;
+                    map_cursor_x = sq.map_x;
+                    map_cursor_y = sq.map_y;
                 }
+            }
+
+            // 壁面（側面）とのカーソル判定
+            HitStatus wall_hit_status = null;
+            Wall hit_wall = null;
+            map_cursor_wall = null;
+            foreach (var sq in map_squares)
+            {
+                //var sq = map_squares[x + y * map_w];
+                Wall wall;
+                var hs = sq.CheckHitWall(mouse_lay, out wall);
+                if ((wall_hit_status == null || wall_hit_status.range > hs.range) && (hs.is_hit))
+                {
+                    wall_hit_status = hs;
+                    hit_wall = wall;
+                }
+            }
+            if (wall_hit_status != null)
+            {
+                if (ground_hit_status == null /*|| (ground_hit_status.range < wall_hit_status.range)*/)
+                {
+                }
+                map_cursor_wall = hit_wall;
             }
 
             // ユニットのカーソル判定（こっちがあるなら上書きする）
@@ -295,6 +317,13 @@ namespace TOL_SRPG.App.Map
                     }
 
                 }
+            }
+
+            // 壁面カーソルの描画
+            if ( map_cursor_wall!=null )
+            {
+                var copy_panel = map_cursor_wall.panel.CopyFrom();
+                copy_panel.Draw();
             }
 
             // 手番ユニットのカーソル表示
@@ -459,20 +488,14 @@ namespace TOL_SRPG.App.Map
         public void SetTurnOwnerCursor( Unit u )
         {
             cursor_turn_owner_unit = u;
-            //if ( u==null)
-            //{
-            //    is_draw_cursor_turn_owner = false;
-            //}
-            //else
-            //{
-            //    is_draw_cursor_turn_owner = true;
-            //    float x=0.0f, y = 0.0f, z = 0.0f;
-            //    Get3DPos(u.map_x, u.map_y, ref x, ref y, ref z);
-            //    y += 20.0f;
-            //    model_cursor_turn_owner.Pos(x, y, z);
-            //}
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="key"></param>
         public void SetMapGroundMaterial( int x, int y, string key )
         {
             var p = x + y * map_w;
@@ -480,6 +503,14 @@ namespace TOL_SRPG.App.Map
 
             var gm = material_manager.ground_materials[key];
             sq.ground_material = gm;
+        }
+
+
+        public void SetMapWallMaterial( Wall wall, string key)
+        {
+            var gm = material_manager.wall_materials[key];
+            wall.panel.SetTexture(gm.image_handle);
+
         }
 
     }

@@ -238,8 +238,19 @@ namespace TOL_SRPG.App
                 {
                     var keys = tool_window.select_tool_key_word.Split(' ');
 
+                    if (keys[0] == "ground")
+                    {
+                        g3d_map.SetMapGroundMaterial(g3d_map.map_cursor_x, g3d_map.map_cursor_y, keys[1]);
+                    }
+                }
 
-                    g3d_map.SetMapGroundMaterial(g3d_map.map_cursor_x, g3d_map.map_cursor_y, keys[1]);
+                if (g3d_map.map_cursor_wall!=null)
+                {
+                    var keys = tool_window.select_tool_key_word.Split(' ');
+                    if (keys[0] == "wall")
+                    {
+                        g3d_map.SetMapWallMaterial(g3d_map.map_cursor_wall, keys[1]);
+                    }
                 }
             }
         }

@@ -268,6 +268,18 @@ namespace TOL_SRPG.Base
             uv_pos = pos;
             uv_size = size;
         }
+
+        /// <summary>
+        /// 座標とサイズ、向きが同じコピーを返す
+        /// </summary>
+        /// <returns>S3DPanel</returns>
+        public S3DPanel CopyFrom()
+        {
+            var panel = new S3DPanel(new S3DPoint(pos.x, pos.y, pos.z), new SDPoint(size.x, size.y) );
+            panel.direction = this.direction;
+            return panel;
+        }
+
     }
 
     // 当たり判定の結果

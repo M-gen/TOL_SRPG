@@ -115,5 +115,32 @@ namespace TOL_SRPG.App.Map
             return top_ground.CheckHit(line);
         }
 
+        public HitStatus CheckHitWall(S3DLine line, out Wall res_wall)
+        {
+            HitStatus tmp_hs = null;
+            Wall tmp_wall = null;
+
+            // 壁の描画
+            foreach (var wall_line in walls)
+            {
+                foreach (var wall in wall_line)
+                {
+                    var hs = wall.panel.CheckHit(line);
+                    if ( (tmp_hs==null|| tmp_hs.range > hs.range ) && (hs.is_hit) )
+                    {
+                        tmp_hs = hs;
+                        tmp_wall = wall;
+                    }
+                }
+            }
+            if (tmp_hs == null)
+            {
+                tmp_hs = new HitStatus();
+            }
+
+            res_wall = tmp_wall;
+            return tmp_hs;
+        }
+
     }
 }
