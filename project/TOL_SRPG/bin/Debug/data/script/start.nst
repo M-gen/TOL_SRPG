@@ -33,6 +33,6 @@ def Setup
 	// DebugMode "Auto"
 	
 	// シーンのセットアップ
-	SetupScene PreBattle "data/script/pre_battle.nst" "data/script/stage_0.nst"
+	//SetupScene PreBattle "data/script/pre_battle.nst" "data/script/stage_0.nst"
 	//SetupScene Battle "data/script/stage_0.nst"
-	//SetupScene CreateMap
+	SetupScene CreateMap

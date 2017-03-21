@@ -64,6 +64,20 @@ namespace TOL_SRPG.App.Map
             }
         }
 
+        /// <summary>
+        /// コンストラクタ(コピー)
+        /// </summary>
+        /// <param name="copy_src"></param>
+        public Wall(Wall copy_src)
+        {
+            map_x = copy_src.map_x;
+            map_y = copy_src.map_y;
+            material = copy_src.material;
+            panel = copy_src.panel;
+            height = copy_src.height;
+            direction_id = copy_src.direction_id;
+        }
+
         public void Draw()
         {
             if (panel != null) panel.Draw();

@@ -52,11 +52,21 @@ namespace TOL_SRPG.App.Map
         public bool is_draw_cursor_turn_owner = false;
         float cursor_turn_owner_offset_y_timer = 0;
 
+        public class ScriptData
+        {
+            public int map_w;
+            public int map_h;
+            public List<int> map_height_data = new List<int>();
+            public Script script;
+            public string wall_default_material_key = "";
+        }
+        public ScriptData setup_script_data = new ScriptData();
 
         public BattleMap(GameBase game_base)
         {
             this.game_base = game_base;
 
+            //material_manager.AddGroundMaterial("", "data/image/map/ground_00_test.bmp"); // ダミー
             material_manager.AddGroundMaterial("", "data/image/map/ground_01_01.png"); // ダミー
             material_manager.AddGroundMaterial("平原_01", "data/image/map/ground_01_01.png");
             material_manager.AddGroundMaterial("土_01", "data/image/map/ground_02_01.png");
@@ -64,7 +74,8 @@ namespace TOL_SRPG.App.Map
             material_manager.AddGroundMaterial("白レンガ_01", "data/image/map/ground_04_01.png");
             material_manager.AddGroundMaterial("水_01", "data/image/map/ground_05_01.png");
 
-            material_manager.AddWallMaterial("", "data/image/map/wall_01_01.png"); // ダミー
+            material_manager.AddWallMaterial("", "data/image/map/wall_00_test.bmp"); // ダミー
+            //material_manager.AddWallMaterial("", "data/image/map/wall_01_01.png"); // ダミー
             material_manager.AddWallMaterial("土_01", "data/image/map/wall_01_01.png");
             material_manager.AddWallMaterial("土_02", "data/image/map/wall_01_02.png");
             material_manager.AddWallMaterial("白レンガ_01", "data/image/map/wall_02_01.png");
@@ -73,24 +84,27 @@ namespace TOL_SRPG.App.Map
 
             model_cursor_turn_owner = new G3DModel("data/model/action_items/cursor_turn_owner.pmd");
             
-            Setup(layer_0_ground, "土_01");
+            //Setup(layer_0_ground, "土_01");
+            Setup(layer_0_ground, setup_script_data.wall_default_material_key);
 
-            SetMapGroundMaterial(1, 1, "土_01");
-            SetMapGroundMaterial(1, 2, "土_01");
-            SetMapGroundMaterial(2, 1, "土_01");
-            SetMapGroundMaterial(2, 2, "土_01");
-            SetMapGroundMaterial(3, 1, "石_01");
-            SetMapGroundMaterial(3, 2, "石_01");
-            SetMapGroundMaterial(4, 1, "白レンガ_01");
-            SetMapGroundMaterial(4, 2, "白レンガ_01");
-            SetMapGroundMaterial(4, 3, "白レンガ_01");
-            SetMapGroundMaterial(5, 3, "水_01");
-            SetMapGroundMaterial(6, 3, "水_01");
-            SetMapGroundMaterial(7, 3, "水_01");
+            SetGroundMaterial(1, 1, "土_01");
+            SetGroundMaterial(1, 2, "土_01");
+            SetGroundMaterial(2, 1, "土_01");
+            SetGroundMaterial(2, 2, "土_01");
+            SetGroundMaterial(3, 1, "石_01");
+            SetGroundMaterial(3, 2, "石_01");
+            SetGroundMaterial(4, 1, "白レンガ_01");
+            SetGroundMaterial(4, 2, "白レンガ_01");
+            SetGroundMaterial(4, 3, "白レンガ_01");
+            SetGroundMaterial(5, 3, "水_01");
+            SetGroundMaterial(6, 3, "水_01");
+            SetGroundMaterial(7, 3, "水_01");
         }
 
         public void Setup( int[] layer_0_ground, string wall_default_material_key = "")
         {
+            this.setup_script_data.wall_default_material_key = wall_default_material_key;
+
             map_squares = new Square[map_w * map_h];
             for (int i = 0; i < map_w * map_h; i++)
             {
@@ -104,11 +118,6 @@ namespace TOL_SRPG.App.Map
             action_target_area = new RangeAreaActionTarget(map_w, map_h);
 
             UpdateLayer();
-
-            for (int i = 0; i < map_w * map_h; i++)
-            {
-                map_squares[i].Setup(material_manager, wall_default_material_key);
-            }
         }
 
         public void UpdateLayer()
@@ -117,33 +126,48 @@ namespace TOL_SRPG.App.Map
             {
                 var x = i % map_w;
                 var y = i / map_w;
-                var sq = map_squares[i];
-                //map_squares[i] = new Square();
-                //map_squares[i].height = layer_0_ground[i];
-                sq.under[0] = 0; // 初期化
-                sq.under[1] = 0;
-                sq.under[2] = 0;
-                sq.under[3] = 0;
+                UpdateLayer_Square(x, y, true);
+            }
+        }
 
-                // 壁面の高さを算出
-                var h = sq.height;
-                for ( int j=0; j<4; j++)
+        // is_setup : trueだと完全初期化(Setup)する falseだとSetupWallで壁面のみの更新
+        private void UpdateLayer_Square( int map_x, int map_y, bool is_setup = true)
+        {
+            if (map_x < 0 || map_w <= map_x) return;
+            if (map_y < 0 || map_h <= map_y) return;
+
+            var p = map_x + map_y * map_w;
+            var sq = map_squares[p];
+            //map_squares[i].height = layer_0_ground[i];
+            sq.under[0] = 0; // 初期化
+            sq.under[1] = 0;
+            sq.under[2] = 0;
+            sq.under[3] = 0;
+
+            // 壁面の高さを算出
+            var h = sq.height;
+            for (int j = 0; j < 4; j++)
+            {
+                var h2 = 0;
+                switch (j)
                 {
-                    var h2 = 0;
-                    switch(j)
-                    {
-                        case 0: h2 = GetHeight(x, y - 1); break;
-                        case 1: h2 = GetHeight(x+1,y); break;
-                        case 2: h2 = GetHeight(x, y + 1); break;
-                        case 3: h2 = GetHeight(x-1, y); break;
-                    }
-                    var hd = h - h2;              // 差分
-                    if (h2 == -1) hd = h - 0;     // -1:マップはし
-                    if (hd > 0) sq.under[j] = hd; // 確定
-
-                    //Console.WriteLine( "s " + i.ToString() + " " + hd + " " + h + " " + h2 );
+                    case 0: h2 = GetHeight(map_x, map_y - 1); break;
+                    case 1: h2 = GetHeight(map_x + 1, map_y); break;
+                    case 2: h2 = GetHeight(map_x, map_y + 1); break;
+                    case 3: h2 = GetHeight(map_x - 1, map_y); break;
                 }
+                var hd = h - h2;              // 差分
+                if (h2 == -1) hd = h - 0;     // -1:マップはし
+                if (hd > 0) sq.under[j] = hd; // 確定
 
+            }
+            if(is_setup)
+            {
+                sq.Setup(material_manager, setup_script_data.wall_default_material_key);
+            }
+            else
+            {
+                sq.SetupWall(material_manager, setup_script_data.wall_default_material_key);
             }
         }
 
@@ -159,19 +183,7 @@ namespace TOL_SRPG.App.Map
 
         public void UpdateInterface()
         {
-            // カーソル状態更新
-            //int mx, my;
-            //float distance_now = -1f;
-            //float distance_tmp = -1f;
-            //DX.VECTOR StartPos, EndPos;
-            ////DX.GetMousePoint(out mx, out my);
-            //mx = game_base.input.mouse_sutatus.position.X;
-            //my = game_base.input.mouse_sutatus.position.Y;
-            //// マウスポインタがある画面上の座標に該当する３Ｄ空間上の Near 面の座標を取得
-            //StartPos = DX.ConvScreenPosToWorldPos(DX.VGet(mx, my, 0.0f));
-            //// マウスポインタがある画面上の座標に該当する３Ｄ空間上の Far 面の座標を取得
-            //EndPos = DX.ConvScreenPosToWorldPos(DX.VGet(mx, my, 1.0f));
-
+            // カーソル更新
             map_cursor_x = -1;
             map_cursor_y = -1;
             var mouse_lay = S3DLine.GetMouseLay();
@@ -496,7 +508,7 @@ namespace TOL_SRPG.App.Map
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="key"></param>
-        public void SetMapGroundMaterial( int x, int y, string key )
+        public void SetGroundMaterial( int x, int y, string key )
         {
             var p = x + y * map_w;
             var sq = map_squares[p];
@@ -506,12 +518,171 @@ namespace TOL_SRPG.App.Map
         }
 
 
-        public void SetMapWallMaterial( Wall wall, string key)
+        public void SetWallMaterial( Wall wall, string key)
         {
             var gm = material_manager.wall_materials[key];
+            wall.material = gm;
             wall.panel.SetTexture(gm.image_handle);
 
         }
 
+        // マップの高さの変更
+        public void SetMapHeight( int map_x, int map_y, int height )
+        {
+            var p = map_x + map_y * map_w;
+            var sq = map_squares[p];
+            //var height = sq.height;
+
+            //sq.height = height;
+            sq.SetHeight(height);
+            UpdateLayer_Square(map_x,   map_y, false);
+            UpdateLayer_Square(map_x-1, map_y, false);
+            UpdateLayer_Square(map_x+1, map_y, false);
+            UpdateLayer_Square(map_x, map_y-1, false);
+            UpdateLayer_Square(map_x, map_y+1, false);
+        }
+
+        public void Load( string file_path )
+        {
+            var ssd = setup_script_data;
+            ssd.script = new Script(file_path, _ScriptLineAnalyze);
+            ssd.map_height_data.Clear();
+            ssd.script.Run("Setup");
+        }
+
+        public bool _ScriptLineAnalyze(Script.ScriptLineToken t)
+        {
+            //var game_main = GameMain.GetInstance();
+            //var user_interface = game_main.user_interface;
+            //var game_base = game_main.game_base;
+            //var unit_manager = game_main.unit_manager;
+
+            switch (t.command[0])
+            {
+                case "AddHeight":
+                    {
+                        var size = t.command.Count();
+                        for (var i = 1; i < size; i++)
+                        {
+                            setup_script_data.map_height_data.Add(t.GetInt(i));
+                        }
+                        setup_script_data.map_w = size - 1;
+                    }
+                    return true;
+                case "Setup":
+                    {
+                        setup_script_data.map_h = setup_script_data.map_height_data.Count() / setup_script_data.map_w;
+                        this.map_w = setup_script_data.map_w;
+                        this.map_h = setup_script_data.map_h;
+
+                        Setup(setup_script_data.map_height_data.ToArray(), setup_script_data.wall_default_material_key);
+
+                    }
+                    return true;
+                case "SetWallDefalutMaterial":
+                    {
+                        setup_script_data.wall_default_material_key = t.GetString(1);
+                    }
+                    return true;
+                case "SetGroundMaterial":
+                    {
+                        var map_x = t.GetInt(1);
+                        var map_y = t.GetInt(2);
+                        var key   = t.GetString(3);
+                        SetGroundMaterial(map_x, map_y, key);
+                    }
+                    return true;
+                case "SetWallMaterial":
+                    {
+                        var map_x = t.GetInt(1);
+                        var map_y = t.GetInt(2);
+                        var direction_id = t.GetInt(3);
+                        var height = t.GetInt(4);
+                        var key = t.GetString(5);
+                        var wall = GetWall(map_x, map_y, (Wall.DirectionID)direction_id, height);
+                        SetWallMaterial(wall, key);
+                    }
+                    return true;
+            }
+            return false;
+        }
+
+        private Wall GetWall(int map_x, int map_y, Wall.DirectionID direction_id, int height)
+        {
+            var p = map_x + map_y * map_w;
+            var sq = map_squares[p];
+
+            Wall wall = null;
+            try
+            {
+                wall = sq.walls[(int)direction_id][height];
+            }
+            catch
+            {
+                wall = null;
+            }
+
+            return wall;
+        }
+
+        public void Save( string file_path)
+        {
+            using (var sw = new System.IO.StreamWriter(
+                  file_path,
+                  false/*,
+                  System.Text.Encoding.GetEncoding("UTF-8")*/))
+            {
+                sw.WriteLine("def Setup");
+
+                for (var y = 0; y < map_h; y++)
+                {
+                    var height_strings = "";
+                    for (var x = 0; x < map_w; x++)
+                    {
+                        var p = x + y * map_w;
+                        var sq = map_squares[p];
+                        height_strings += " " + sq.height;
+                    }
+                    sw.WriteLine("AddHeight" + height_strings);
+                }
+
+                sw.WriteLine("SetWallDefalutMaterial \"{0}\"",setup_script_data.wall_default_material_key);
+                sw.WriteLine("Setup");
+
+                // 地面
+                for (var y = 0; y < map_h; y++)
+                {
+                    for (var x = 0; x < map_w; x++)
+                    {
+                        var p = x + y * map_w;
+                        var sq = map_squares[p];
+                        sw.WriteLine("SetGroundMaterial {0} {1} \"{2}\"", x, y, sq.ground_material.key);
+                    }
+                }
+
+                // 壁面,側面
+                for (var y = 0; y < map_h; y++)
+                {
+                    for (var x = 0; x < map_w; x++)
+                    {
+                        var p = x + y * map_w;
+                        var sq = map_squares[p];
+                        for( var i=0; i<Square.WALL_DIRECTION; i++)
+                        {
+                            var h_size = sq.walls[i].Count();
+                            for (var h = 0; h < h_size; h++)
+                            {
+                                var wall = sq.walls[i][h];
+                                sw.WriteLine("SetWallMaterial {0} {1} {2} {3} \"{4}\"", x, y, i, h, wall.material.key);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
     }
+
+
 }

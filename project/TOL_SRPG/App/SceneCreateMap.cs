@@ -113,6 +113,20 @@ namespace TOL_SRPG.App
 
                 button_box.Add(key_word, image_path);
             }
+
+            button_box.Add("ground_up", @"data/image/develop/ground_up.bmp");
+            button_box.Add("ground_down", @"data/image/develop/ground_down.bmp");
+            button_box.Add("save", @"data/image/develop/save.bmp");
+            button_box.Add("load", @"data/image/develop/load.bmp");
+            button_box.Add("resize_h_m1",  @"data/image/develop/resize_h_m1.bmp");
+            button_box.Add("resize_h_m1b", @"data/image/develop/resize_h_m1b.bmp");
+            button_box.Add("resize_h_m1",  @"data/image/develop/resize_w_m1.bmp");
+            button_box.Add("resize_h_m1b", @"data/image/develop/resize_w_m1b.bmp");
+            button_box.Add("resize_h_m1",  @"data/image/develop/resize_h_p1.bmp");
+            button_box.Add("resize_h_m1b", @"data/image/develop/resize_h_p1b.bmp");
+            button_box.Add("resize_h_m1",  @"data/image/develop/resize_w_p1.bmp");
+            button_box.Add("resize_h_m1b", @"data/image/develop/resize_w_p1b.bmp");
+
         }
 
         private void FormCreateMapToolWindow_Paint(object sender, PaintEventArgs e)
@@ -139,6 +153,7 @@ namespace TOL_SRPG.App
 
             tool_window = new FormCreateMapToolWindow();
 
+            game_main.g3d_map.Load(@"data/script/stage_0_map.nst");
         }
 
         public override void Update()
@@ -150,6 +165,7 @@ namespace TOL_SRPG.App
             game_main.action_manager.Update();
             game_main.unit_manager.Update();
             game_main.g3d_camera.Update();
+
         }
 
         public override void Draw(bool is_shadowmap)
@@ -234,24 +250,92 @@ namespace TOL_SRPG.App
 
             if (game_base.input.mouse_sutatus.left.key_status == Input.MouseButtonKeyStatus.OneCrick)
             {
-                if (g3d_map.map_cursor_x >= 0 && g3d_map.map_cursor_y >= 0) // 3Dマップへの入力
-                {
-                    var keys = tool_window.select_tool_key_word.Split(' ');
+                var keys = tool_window.select_tool_key_word.Split(' ');
+                if (keys.Count() >= 0) {
 
-                    if (keys[0] == "ground")
+                    switch (keys[0])
                     {
-                        g3d_map.SetMapGroundMaterial(g3d_map.map_cursor_x, g3d_map.map_cursor_y, keys[1]);
+                        case "ground":
+                            if (g3d_map.map_cursor_x >= 0 && g3d_map.map_cursor_y >= 0)
+                            {
+                                g3d_map.SetGroundMaterial(g3d_map.map_cursor_x, g3d_map.map_cursor_y, keys[1]);
+                            }
+                            break;
+                        case "wall":
+                            if (g3d_map.map_cursor_wall != null)
+                            {
+                                g3d_map.SetWallMaterial(g3d_map.map_cursor_wall, keys[1]);
+                            }
+                            break;
+                        case "ground_up":
+                            if (g3d_map.map_cursor_x >= 0 && g3d_map.map_cursor_y >= 0)
+                            {
+                                var height = g3d_map.GetHeight(g3d_map.map_cursor_x, g3d_map.map_cursor_y) + 1;
+                                g3d_map.SetMapHeight(g3d_map.map_cursor_x, g3d_map.map_cursor_y, height);
+                            }
+                            break;
+                        case "ground_down":
+                            if (g3d_map.map_cursor_x >= 0 && g3d_map.map_cursor_y >= 0)
+                            {
+                                var height = g3d_map.GetHeight(g3d_map.map_cursor_x, g3d_map.map_cursor_y) - 1;
+                                if (height < 0) height = 0;
+                                g3d_map.SetMapHeight(g3d_map.map_cursor_x, g3d_map.map_cursor_y, height);
+                            }
+                            break;
                     }
                 }
-
-                if (g3d_map.map_cursor_wall!=null)
-                {
-                    var keys = tool_window.select_tool_key_word.Split(' ');
-                    if (keys[0] == "wall")
+            }
+            switch (tool_window.select_tool_key_word)
+            {
+                case "save":
                     {
-                        g3d_map.SetMapWallMaterial(g3d_map.map_cursor_wall, keys[1]);
+                        var sfd = new SaveFileDialog();
+                        sfd.FileName = "新しいファイル_map.nst";
+                        //sfd.InitialDirectory = @"C:\";
+                        //sfd.Filter = "HTMLファイル(*.html;*.htm)|*.html;*.htm|すべてのファイル(*.*)|*.*";
+                        sfd.Filter = "nst|*.nst|すべてのファイル(*.*)|*.*";
+                        sfd.FilterIndex = 1; //1番目の「nst」が選択されているようにする
+                        sfd.Title = "保存先のファイルを選択してください";
+                        sfd.RestoreDirectory = true; //ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+                        sfd.OverwritePrompt = true; //既に存在するファイル名を指定したとき警告する //デフォルトでTrueなので指定する必要はない
+                        sfd.CheckPathExists = true; //存在しないパスが指定されたとき警告を表示する //デフォルトでTrueなので指定する必要はない
+
+                        //ダイアログを表示する
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            //OKボタンがクリックされたとき、選択されたファイル名を表示する
+                            //Console.WriteLine(sfd.FileName);
+                            g3d_map.Save(sfd.FileName);
+                        }
+                        tool_window.select_tool_key_word = "";
                     }
-                }
+                    break;
+                case "load":
+                    {
+                        var ofd = new OpenFileDialog();
+                        //sfd.FileName = "新しいファイル_map.nst";
+                        //sfd.InitialDirectory = @"C:\";
+                        //sfd.Filter = "HTMLファイル(*.html;*.htm)|*.html;*.htm|すべてのファイル(*.*)|*.*";
+                        ofd.Filter = "nst|*.nst|すべてのファイル(*.*)|*.*";
+                        ofd.FilterIndex = 1; //1番目の「nst」が選択されているようにする
+                        ofd.Title = "開くファイルを選択してください";
+                        ofd.RestoreDirectory = true; //ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+                        //ofd.OverwritePrompt = true; //既に存在するファイル名を指定したとき警告する //デフォルトでTrueなので指定する必要はない
+                        ofd.CheckFileExists = true;
+                        ofd.CheckPathExists = true; //存在しないパスが指定されたとき警告を表示する //デフォルトでTrueなので指定する必要はない
+
+                        //ダイアログを表示する
+                        if (ofd.ShowDialog() == DialogResult.OK)
+                        {
+                            //OKボタンがクリックされたとき、選択されたファイル名を表示する
+                            //Console.WriteLine(sfd.FileName);
+                            //g3d_map.Save(sfd.FileName);
+                            g3d_map.Load(ofd.FileName);
+                        }
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+
             }
         }
     }
