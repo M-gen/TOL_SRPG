@@ -114,10 +114,14 @@ namespace TOL_SRPG.App.Map
                 map_squares[i] = new Square(map_x, map_y, layer_0_ground[i]);
             }
 
+            SetupAreas();
+            UpdateLayer();
+        }
+
+        private void SetupAreas()
+        {
             move_area = new RangeAreaMove(map_w, map_h);
             action_target_area = new RangeAreaActionTarget(map_w, map_h);
-
-            UpdateLayer();
         }
 
         public void UpdateLayer()
@@ -138,7 +142,6 @@ namespace TOL_SRPG.App.Map
 
             var p = map_x + map_y * map_w;
             var sq = map_squares[p];
-            //map_squares[i].height = layer_0_ground[i];
             sq.under[0] = 0; // 初期化
             sq.under[1] = 0;
             sq.under[2] = 0;
@@ -681,6 +684,49 @@ namespace TOL_SRPG.App.Map
 
             }
         }
+
+        // マップサイズを変更する
+        public void Resize( int new_map_w, int new_map_h, int left_x, int top_y  )
+        {
+            if (new_map_w < 1) return;
+            if (new_map_h < 1) return;
+
+            var size = new_map_w * new_map_h;
+            var new_map_squares = new Square[size];
+            var old_map_w = map_w;
+            var old_map_h = map_h;
+
+            for( var x = 0; x < new_map_w; x++ )
+            {
+                for (var y = 0; y < new_map_h; y++)
+                {
+                    var copy_x = x + left_x;
+                    var copy_y = y + top_y;
+                    var p = x + y * new_map_w;
+
+                    if ( (  0 <= copy_x  && copy_x < map_w) && (0 <= copy_y && copy_y < map_h) )
+                    {
+                        var old_p = copy_x + copy_y * map_w;
+                        new_map_squares[p] = map_squares[old_p];
+                        new_map_squares[p].SetPos(x, y);
+                    }
+                    else
+                    {
+                        new_map_squares[p] = new Square(x,y,1);
+                    }
+                }
+            }
+
+            // 引き継ぎ完了
+            map_w = new_map_w;
+            map_h = new_map_h;
+            SetupAreas();
+            map_squares = new_map_squares;
+            UpdateLayer();
+
+            
+        }
+
 
     }
 

@@ -120,12 +120,12 @@ namespace TOL_SRPG.App
             button_box.Add("load", @"data/image/develop/load.bmp");
             button_box.Add("resize_h_m1",  @"data/image/develop/resize_h_m1.bmp");
             button_box.Add("resize_h_m1b", @"data/image/develop/resize_h_m1b.bmp");
-            button_box.Add("resize_h_m1",  @"data/image/develop/resize_w_m1.bmp");
-            button_box.Add("resize_h_m1b", @"data/image/develop/resize_w_m1b.bmp");
-            button_box.Add("resize_h_m1",  @"data/image/develop/resize_h_p1.bmp");
-            button_box.Add("resize_h_m1b", @"data/image/develop/resize_h_p1b.bmp");
-            button_box.Add("resize_h_m1",  @"data/image/develop/resize_w_p1.bmp");
-            button_box.Add("resize_h_m1b", @"data/image/develop/resize_w_p1b.bmp");
+            button_box.Add("resize_w_m1",  @"data/image/develop/resize_w_m1.bmp");
+            button_box.Add("resize_w_m1b", @"data/image/develop/resize_w_m1b.bmp");
+            button_box.Add("resize_h_p1",  @"data/image/develop/resize_h_p1.bmp");
+            button_box.Add("resize_h_p1b", @"data/image/develop/resize_h_p1b.bmp");
+            button_box.Add("resize_w_p1",  @"data/image/develop/resize_w_p1.bmp");
+            button_box.Add("resize_w_p1b", @"data/image/develop/resize_w_p1b.bmp");
 
         }
 
@@ -332,6 +332,54 @@ namespace TOL_SRPG.App
                             //g3d_map.Save(sfd.FileName);
                             g3d_map.Load(ofd.FileName);
                         }
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+                case "resize_h_m1":
+                    {
+                        g3d_map.Resize(g3d_map.map_w, g3d_map.map_h - 1, 0, 0);
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+                case "resize_h_m1b":
+                    {
+                        g3d_map.Resize(g3d_map.map_w, g3d_map.map_h - 1, 0, 1);
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+                case "resize_w_m1":
+                    {
+                        g3d_map.Resize(g3d_map.map_w - 1, g3d_map.map_h, 1, 0);
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+                case "resize_w_m1b":
+                    {
+                        g3d_map.Resize(g3d_map.map_w - 1, g3d_map.map_h, 0, 0);
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+                case "resize_h_p1":
+                    {
+                        g3d_map.Resize(g3d_map.map_w, g3d_map.map_h + 1, 0, 0);
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+                case "resize_h_p1b":
+                    {
+                        g3d_map.Resize(g3d_map.map_w, g3d_map.map_h + 1, 0, -1);
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+                case "resize_w_p1":
+                    {
+                        g3d_map.Resize(g3d_map.map_w + 1, g3d_map.map_h, -1, 0);
+                        tool_window.select_tool_key_word = "";
+                    }
+                    break;
+                case "resize_w_p1b":
+                    {
+                        g3d_map.Resize(g3d_map.map_w + 1, g3d_map.map_h, 0, 0);
                         tool_window.select_tool_key_word = "";
                     }
                     break;

@@ -104,14 +104,22 @@ namespace TOL_SRPG.App.Map
 
         }
 
+        public void SetPos( int map_x, int map_y )
+        {
+            this.map_x = map_x;
+            this.map_y = map_y;
+            UpdatePos();
+        }
+
         public void SetHeight( int height )
         {
             this.height = height;
+            UpdatePos();
+        }
+
+        private void UpdatePos()
+        {
             top_ground.SetPos(new S3DPoint(BattleMap.SQUARE_SIZE * (map_x + 0.5), BattleMap.HIGHT_ONE_VALUE * height, BattleMap.SQUARE_SIZE * (map_y + 0.5)));
-            //top_ground = new S3DPanel(new S3DPoint(BattleMap.SQUARE_SIZE * (map_x + 0.5), BattleMap.HIGHT_ONE_VALUE * height, BattleMap.SQUARE_SIZE * (map_y + 0.5)),
-            //    new SDPoint(BattleMap.SQUARE_SIZE, BattleMap.SQUARE_SIZE), S3DPanel.Direction.Top);
-            //top_ground.SetColor(255, 255, 255, 255);
-            //top_ground.SetSpecularColor(255, 70, 70, 70);
         }
 
         public HitStatus CheckHitGround(S3DLine line)
