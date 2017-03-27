@@ -613,6 +613,12 @@ namespace TOL_SRPG.App
 
             switch (t.command[0])
             {
+                case "MapLoad":
+                    {
+                        var map_path = t.GetString(1);
+                        g3d_map.Load(map_path);
+                    }
+                    return true;
                 case "MapData":
                     {
                         var size = t.command.Count();

@@ -124,13 +124,13 @@ namespace TOL_SRPG.App.Map
             action_target_area = new RangeAreaActionTarget(map_w, map_h);
         }
 
-        public void UpdateLayer()
+        public void UpdateLayer( bool is_setup = true)
         {
             for (int i = 0; i < map_w * map_h; i++)
             {
                 var x = i % map_w;
                 var y = i / map_w;
-                UpdateLayer_Square(x, y, true);
+                UpdateLayer_Square(x, y, is_setup);
             }
         }
 
@@ -713,6 +713,7 @@ namespace TOL_SRPG.App.Map
                     else
                     {
                         new_map_squares[p] = new Square(x,y,1);
+                        new_map_squares[p].Setup(material_manager, setup_script_data.wall_default_material_key);
                     }
                 }
             }
@@ -722,7 +723,7 @@ namespace TOL_SRPG.App.Map
             map_h = new_map_h;
             SetupAreas();
             map_squares = new_map_squares;
-            UpdateLayer();
+            UpdateLayer(false);
 
             
         }
