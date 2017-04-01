@@ -17,9 +17,9 @@ namespace TOL_SRPG.App
         {
         }
 
-        public virtual void Update() {}
-        public virtual void Draw( bool is_shadowmap )   {}
-        public virtual void Dispose() {}
+        public virtual void Update() { }
+        public virtual void Draw(bool is_shadowmap) { }
+        public virtual void Dispose() { }
     }
 
     public class SceneBattle : Scene
@@ -47,6 +47,7 @@ namespace TOL_SRPG.App
             public List<int> map_data = new List<int>();
         }
         public ScriptData setup_script_data = new ScriptData();
+        PythonScript python_script;
 
         bool is_continue_player_unit = false;
         UserInterface.Command select_command = null;
@@ -62,7 +63,7 @@ namespace TOL_SRPG.App
         /// 
         /// </summary>
         /// <param name="is_continue_player_unit">プレーヤーユニットを引き継ぐかどうか trueならスクリプトから味方を生成しない</param>
-        public SceneBattle( string script_path, bool is_continue_player_unit )
+        public SceneBattle(string script_path, bool is_continue_player_unit)
         {
             this.is_continue_player_unit = is_continue_player_unit;
 
@@ -71,7 +72,9 @@ namespace TOL_SRPG.App
             game_main.g3d_map = new BattleMap(game_main.game_base);
             game_main.g3d_camera = new G3DCamera();
             setup_script = new Script(script_path, _ScriptLineAnalyze);
-            setup_script.Run("Setup");
+            //setup_script.Run("Setup");
+            python_script = new PythonScript(@"data/script/stage_0.py");
+            python_script.script.Setup();
 
             // 戦闘初期化
             turn_owner_unit.unit_manager_status = null;
@@ -178,9 +181,9 @@ namespace TOL_SRPG.App
             }
 
             //if (user_interface.mode == UserInterface.Mode.NonePlayerTurn)
-            if (battle_ai!=null)
+            if (battle_ai != null)
             {
-                if ( battle_ai.GetIsEnd() )
+                if (battle_ai.GetIsEnd())
                 {
                     battle_ai = null;
                     user_interface.SetMode(UserInterface.Mode.PlayerTurnFree, game_base.input.mouse_sutatus.position);
@@ -265,11 +268,11 @@ namespace TOL_SRPG.App
                                     user_interface.SetStatusUnit(select_unit);
                                     g3d_map.ClearRangeAreaEffect();
                                     break;
-                                //case "AI":
-                                //    user_interface.SetMode(UserInterface.Mode.NonePlayerTurn, game_base.input.mouse_sutatus.position);
-                                //    g3d_map.ClearRangeAreaEffect();
-                                //    battle_ai = new BattleAI(this, select_unit);
-                                //    break;
+                                    //case "AI":
+                                    //    user_interface.SetMode(UserInterface.Mode.NonePlayerTurn, game_base.input.mouse_sutatus.position);
+                                    //    g3d_map.ClearRangeAreaEffect();
+                                    //    battle_ai = new BattleAI(this, select_unit);
+                                    //    break;
                             }
                             break;
                     }
@@ -326,15 +329,15 @@ namespace TOL_SRPG.App
                                     //}
                                     //else
                                     //{
-                                        g3d_map.SetMoveAreaEffect(g3d_map.map_cursor_x, g3d_map.map_cursor_y, u.bt.status["MOVE"].now, u.bt.status["JUMP"].now, "");
-                                        user_interface.SetMode(UserInterface.Mode.TurnTopCommandShow, game_base.input.mouse_sutatus.position, turn_owner_unit);
-                                        select_unit = u;
+                                    g3d_map.SetMoveAreaEffect(g3d_map.map_cursor_x, g3d_map.map_cursor_y, u.bt.status["MOVE"].now, u.bt.status["JUMP"].now, "");
+                                    user_interface.SetMode(UserInterface.Mode.TurnTopCommandShow, game_base.input.mouse_sutatus.position, turn_owner_unit);
+                                    select_unit = u;
                                     //}
                                 }
-                                else if ( u != null )
+                                else if (u != null)
                                 {
                                     g3d_map.SetMoveAreaEffect(g3d_map.map_cursor_x, g3d_map.map_cursor_y, u.bt.status["MOVE"].now, u.bt.status["JUMP"].now, "");
-                                    
+
                                     //if(select_unit==u) // 2度クリックしたときはコマンド表示を消す
                                     //{
                                     //    g3d_map.ClearRangeAreaEffect();
@@ -343,8 +346,8 @@ namespace TOL_SRPG.App
                                     //}
                                     //else
                                     //{
-                                        user_interface.SetMode(UserInterface.Mode.SubTopCommandShow, game_base.input.mouse_sutatus.position, null);
-                                        select_unit = u;
+                                    user_interface.SetMode(UserInterface.Mode.SubTopCommandShow, game_base.input.mouse_sutatus.position, null);
+                                    select_unit = u;
                                     //}
                                 }
                                 else
@@ -386,7 +389,7 @@ namespace TOL_SRPG.App
 
         // todo: 行動させるのと、UI制御が混ざってるので、分離したほうが良さそう
         // 行動の実行できるかどうかについても判定しているからややこしい（AIのところで食い違う…多重チェックになってる）
-        public void DoAction( string command, string sub_command, Unit action_unit, int target_map_x, int target_map_y, bool is_user_owner)
+        public void DoAction(string command, string sub_command, Unit action_unit, int target_map_x, int target_map_y, bool is_user_owner)
         {
             var game_main = GameMain.GetInstance();
             var user_interface = game_main.user_interface;
@@ -398,7 +401,7 @@ namespace TOL_SRPG.App
             var is_inside = false;
             var action_data = ActionDataManager.GetActionData(command);
 
-            if ( !is_user_owner )
+            if (!is_user_owner)
             {
                 // 自動・NPCでの操作の場合
                 g3d_map.ClearRangeAreaEffect();
@@ -411,7 +414,7 @@ namespace TOL_SRPG.App
             }
 
             var is_action_do_ok = false;
-            switch ( action_data.range_ok_type)
+            switch (action_data.range_ok_type)
             {
                 case "範囲内": // 範囲内しか行動の実行を認めない
                     if (is_inside) is_action_do_ok = true;
@@ -437,7 +440,7 @@ namespace TOL_SRPG.App
             }
 
             // todo: 行動のモーション、サウンドに関わるため、一旦はこのまま（先に他を整理）
-            switch(command)
+            switch (command)
             {
                 case "Basic／攻撃／剣":
                     {
@@ -544,7 +547,7 @@ namespace TOL_SRPG.App
         public void NextUnitTurn()
         {
             // 旧手番ユニットのWTを調整しておく
-            if (turn_owner_unit.unit_manager_status!=null && turn_owner_unit.unit_manager_status.unit.bt.is_alive)
+            if (turn_owner_unit.unit_manager_status != null && turn_owner_unit.unit_manager_status.unit.bt.is_alive)
             {
                 turn_owner_unit.unit_manager_status.unit.ResetWT();
             }
@@ -565,9 +568,9 @@ namespace TOL_SRPG.App
             if (unit_manager.active_units.Count() > 0)
             {
                 turn_owner_unit.unit_manager_status = unit_manager.active_units[0]; unit_manager.active_units.RemoveAt(0);
-                turn_owner_unit.end_action     = false;
+                turn_owner_unit.end_action = false;
                 turn_owner_unit.end_sub_action = false;
-                turn_owner_unit.end_move       = false;
+                turn_owner_unit.end_move = false;
                 //unit_manager.active_units.RemoveAt(0);
                 game_main.g3d_map.SetTurnOwnerCursor(turn_owner_unit.unit_manager_status.unit);
             }
@@ -636,7 +639,6 @@ namespace TOL_SRPG.App
                         g3d_map.map_h = setup_script_data.map_h;
 
                         g3d_map.Setup(setup_script_data.map_data.ToArray());
-
                     }
                     return true;
                 case "Unit":
@@ -653,9 +655,9 @@ namespace TOL_SRPG.App
                         var color_no = t.GetInt(8);
                         var direction = t.GetInt(9);
 
-                        if ( !(is_continue_player_unit && group == "味方") )
+                        if (!(is_continue_player_unit && group == "味方"))
                         {
-                            var unit = new Unit( unit_class_name, model_path, image_face_path, name, x, y, color_no, direction);
+                            var unit = new Unit(unit_class_name, model_path, image_face_path, name, x, y, color_no, direction);
                             unit_manager.Join(unit, group);
                         }
 
@@ -666,19 +668,19 @@ namespace TOL_SRPG.App
             return false;
         }
 
-        UnitManager.UnitManagerStatus GetUnitManagerStatus( Unit u )
+        UnitManager.UnitManagerStatus GetUnitManagerStatus(Unit u)
         {
             var game_main = GameMain.GetInstance();
             var unit_manager = game_main.unit_manager;
 
-            foreach ( var ums in unit_manager.units )
+            foreach (var ums in unit_manager.units)
             {
                 if (u == ums.unit) return ums;
             }
             return null;
         }
 
-        int GetDamage( Unit atack_unit, Unit target_unit, ActionData action_data )
+        int GetDamage(Unit atack_unit, Unit target_unit, ActionData action_data)
         {
             var dm = 0;
             var game_main = GameMain.GetInstance();
@@ -696,16 +698,16 @@ namespace TOL_SRPG.App
             // ダメージ算出と端数切り捨て
             dm = (int)(atk - def);
             if (dm < 0) dm = 0;
-            
+
             return dm;
         }
 
         // マス単位の距離を取得
-        int GetRangeBySq( Unit a, Unit b )
+        int GetRangeBySq(Unit a, Unit b)
         {
             return Math.Abs(a.map_x - b.map_x) + Math.Abs(a.map_y - b.map_y);
         }
-        
+
     }
 
     public class ActionBattleStart : Action
@@ -754,7 +756,7 @@ namespace TOL_SRPG.App
 
             var t_max = 50;
             var t_end_start = 200;
-            var t_end_time  = 50;
+            var t_end_time = 50;
             var t = timer;
             var t2 = timer - t_max;
             if (t > t_max) t = t_max;
@@ -763,7 +765,7 @@ namespace TOL_SRPG.App
             if (t3 < 0) t3 = 0;
             if (t3 > t_end_time) t3 = t_end_time;
             var x = 100 + (t_max - t) * (t_max - t) * 0.5 + (t_max - t) * (t_max - t) * (t_max - t) * 0.3
-               - ( t3 * t3 * 0.02 + t3*t3*t3 * 0.001 );
+               - (t3 * t3 * 0.02 + t3 * t3 * t3 * 0.001);
             //if (x < 100) x = 100;
             var color_text = DX.GetColor(255, 255, 255);
             var color_text_frame = DX.GetColor(80, 80, 80);
