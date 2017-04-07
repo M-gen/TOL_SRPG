@@ -26,12 +26,45 @@ namespace TOL_SRPG.App
         public int    effect_dst_main_correction = 0;  // 補正 
 
         Script script;
+        public string script_path = "";
+        PythonScript python_script;
 
         public ActionData( string script_path )
         {
-            script = new Script(script_path, _ScriptLineAnalyze);
-            script.Run("Setup");
+            if (script_path.IndexOf(".py") >= 0)
+            {
+                this.script_path = script_path;
+                python_script = new PythonScript(script_path);
+                //python_script.SetVariable("action_data", );
+                python_script.script.Setup(this);
 
+
+            }
+            else
+            {
+                script = new Script(script_path, _ScriptLineAnalyze);
+                script.Run("Setup");
+            }
+
+        }
+
+        public void SetRange(int min, int max, string range_type, string range_ok_type)
+        {
+            this.range_min = min;
+            this.range_max = max;
+            this.range_type = range_type;
+            this.range_ok_type = range_ok_type;
+        }
+
+        public int GetEffectValue( Unit action_unit, Unit target_unit, int range )
+        {
+            if (python_script!=null)
+            {
+                var ev = python_script.script.EffectValue(new RefUnit(action_unit), new RefUnit(target_unit), range);
+                return (int)ev;
+            }
+
+            return 0;
         }
 
         public bool _ScriptLineAnalyze(Script.ScriptLineToken t)
@@ -65,6 +98,22 @@ namespace TOL_SRPG.App
             }
 
             return false;
+        }
+    }
+
+    // 行動の効果を算出するための能力値参照用Unitクラス
+    public class RefUnit
+    {
+        public IronPython.Runtime.PythonDictionary status = new IronPython.Runtime.PythonDictionary();
+
+        public RefUnit( Unit unit )
+        {
+            foreach( var bts in unit.bt.status)
+            {
+                var key = bts.Key;
+                var value = bts.Value.now;
+                status.Add( key, value);
+            }
         }
     }
 

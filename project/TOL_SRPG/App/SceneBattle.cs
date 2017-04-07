@@ -74,6 +74,7 @@ namespace TOL_SRPG.App
             setup_script = new Script(script_path, _ScriptLineAnalyze);
             //setup_script.Run("Setup");
             python_script = new PythonScript(@"data/script/stage_0.py");
+            python_script.SetVariable( "Map",new ScriptConector.BattleMapScriptConector( new ScriptManager(@"data/script/stage_0.py"), is_continue_player_unit) );
             python_script.script.Setup();
 
             // 戦闘初期化
@@ -92,6 +93,7 @@ namespace TOL_SRPG.App
 
             var game_main = GameMain.GetInstance();
             game_main.g3d_map.UpdateInterface();
+            game_main.battle_map_effect_script_conector_manager.Update();
             game_main.action_manager.Update();
             game_main.unit_manager.Update();
             game_main.g3d_camera.Update();
@@ -133,7 +135,7 @@ namespace TOL_SRPG.App
             var unit_manager = game_main.unit_manager;
             user_interface.Update(game_base.input.mouse_sutatus.position);
 
-            if (game_main.action_manager.IsControlFreese())
+            if (game_main.action_manager.IsControlFreese() || game_main.battle_map_effect_script_conector_manager.IsControlFreese())
             {
                 g3d_map.is_draw_cursor_turn_owner = false;
                 return;
@@ -446,8 +448,13 @@ namespace TOL_SRPG.App
                     {
                         var damage = GetDamage(action_unit, target_unit, action_data);
                         var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
-                        ActionManager.Add(new ActionSwing(0));
-                        ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, damage, target_unit));
+                        //ActionManager.Add(new ActionSwing(0));
+                        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path,true, damage, target_unit);
+                        //action.Run();
+                        //ActionManager.Add(action);
+                        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
+
+                        //ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, damage, target_unit));
                     }
                     break;
                 case "Basic／攻撃／弓":
@@ -686,18 +693,20 @@ namespace TOL_SRPG.App
             var game_main = GameMain.GetInstance();
             var range = GetRangeBySq(atack_unit, target_unit);
 
+            dm = action_data.GetEffectValue(atack_unit, target_unit, range);
+
             // 基礎ダメージの算出
             // = 参照能力値 * 参照能力値補正 + 直接指定 + 乱数指定
-            var atk = (double)atack_unit.bt.status[action_data.effect_src_main].now * (double)action_data.effect_src_main_correction / 100.0
-                + action_data.effect_src_direct + (double)action_data.effect_src_random * game_main.random.NextDouble();
+            //var atk = (double)atack_unit.bt.status[action_data.effect_src_main].now * (double)action_data.effect_src_main_correction / 100.0
+            //    + action_data.effect_src_direct + (double)action_data.effect_src_random * game_main.random.NextDouble();
 
-            // 軽減の算出
-            // = 参照能力値 * 参照能力値補正
-            var def = (double)target_unit.bt.status[action_data.effect_dst_main].now * (double)action_data.effect_dst_main_correction / 100.0;
+            //// 軽減の算出
+            //// = 参照能力値 * 参照能力値補正
+            //var def = (double)target_unit.bt.status[action_data.effect_dst_main].now * (double)action_data.effect_dst_main_correction / 100.0;
 
-            // ダメージ算出と端数切り捨て
-            dm = (int)(atk - def);
-            if (dm < 0) dm = 0;
+            //// ダメージ算出と端数切り捨て
+            //dm = (int)(atk - def);
+            //if (dm < 0) dm = 0;
 
             return dm;
         }

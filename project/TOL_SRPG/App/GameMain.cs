@@ -36,6 +36,8 @@ namespace TOL_SRPG.App
         public STaskManager stask_manager = new STaskManager();
         public UnitDataManager unit_data_manager = new UnitDataManager();
 
+        public ScriptConector.BattleMapEffectScriptConectorManager battle_map_effect_script_conector_manager = new ScriptConector.BattleMapEffectScriptConectorManager();
+
         bool is_use_shadowmap = true;
         public bool is_shadowmap_draw = false; // シャドウマップ中の描画かどうか
 

@@ -153,6 +153,7 @@ namespace TOL_SRPG.App
 
             tool_window = new FormCreateMapToolWindow();
 
+            game_main.g3d_map.is_use_map_cursor_wall = true;
             game_main.g3d_map.Load(@"data/script/stage_0_map.nst");
         }
 

@@ -456,43 +456,43 @@ namespace TOL_SRPG.App
         }
     }
 
-    // 戦闘不能になる
-    public class ActionUnableToFight : Action
-    {
-        int timer = 0;
-        int timer_start_wait = 0;
+    //// 戦闘不能になる
+    //public class ActionUnableToFight : Action
+    //{
+    //    int timer = 0;
+    //    int timer_start_wait = 0;
 
-        public ActionUnableToFight(int start_wait = 0)
-        {
-            this.timer_start_wait = start_wait;
-        }
+    //    public ActionUnableToFight(int start_wait = 0)
+    //    {
+    //        this.timer_start_wait = start_wait;
+    //    }
 
-        public override void Update()
-        {
-            if (timer_start_wait > 0)
-            {
-                timer_start_wait--;
-                return;
-            }
-
-
-            timer++;
-
-            if (timer == 1)
-            {
-                SoundManager.PlaySound("戦闘／倒れる音", 0.5);
-            }
-
-            if (timer >= 100) is_end = true;
-        }
+    //    public override void Update()
+    //    {
+    //        if (timer_start_wait > 0)
+    //        {
+    //            timer_start_wait--;
+    //            return;
+    //        }
 
 
-        public override void Draw()
-        {
-            if (timer_start_wait > 0) return;
+    //        timer++;
 
-        }
+    //        if (timer == 1)
+    //        {
+    //            SoundManager.PlaySound("戦闘／倒れる音", 0.5);
+    //        }
 
-    }
+    //        if (timer >= 100) is_end = true;
+    //    }
+
+
+    //    public override void Draw()
+    //    {
+    //        if (timer_start_wait > 0) return;
+
+    //    }
+
+    //}
 
 }

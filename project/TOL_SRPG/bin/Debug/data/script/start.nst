@@ -20,7 +20,7 @@ def Setup
 	
 	ConectOnePointModel "戦闘／矢" "data/model/action_items/shoot_arrow.pmd"
 	
-	SetupActionData "data/script/action/action_001_atk_sword.nst"
+	SetupActionData "data/script/action/action_001_atk_sword.py"
 	SetupActionData "data/script/action/action_002_atk_arrow.nst"
 	SetupActionData "data/script/action/action_003_atk_magic_heatboil.nst"
 
@@ -29,7 +29,7 @@ def Setup
 	SetupClassData "data/script/class/class_003_archer.nst"
 	SetupClassData "data/script/class/class_004_wizard.nst"
 
-	// DebugMode "UI"
+	 DebugMode "UI"
 	// DebugMode "Auto"
 	
 	// シーンのセットアップ

@@ -46,6 +46,7 @@ namespace TOL_SRPG.App.Map
         public int map_cursor_x = 3;
         public int map_cursor_y = 3;
         public Wall map_cursor_wall = null;
+        public bool is_use_map_cursor_wall = false;
 
         G3DModel model_cursor_turn_owner;
         Unit cursor_turn_owner_unit = null;
@@ -207,26 +208,29 @@ namespace TOL_SRPG.App.Map
             }
 
             // 壁面（側面）とのカーソル判定
-            HitStatus wall_hit_status = null;
-            Wall hit_wall = null;
-            map_cursor_wall = null;
-            foreach (var sq in map_squares)
+            if (is_use_map_cursor_wall)
             {
-                //var sq = map_squares[x + y * map_w];
-                Wall wall;
-                var hs = sq.CheckHitWall(mouse_lay, out wall);
-                if ((wall_hit_status == null || wall_hit_status.range > hs.range) && (hs.is_hit))
+                HitStatus wall_hit_status = null;
+                Wall hit_wall = null;
+                map_cursor_wall = null;
+                foreach (var sq in map_squares)
                 {
-                    wall_hit_status = hs;
-                    hit_wall = wall;
+                    //var sq = map_squares[x + y * map_w];
+                    Wall wall;
+                    var hs = sq.CheckHitWall(mouse_lay, out wall);
+                    if ((wall_hit_status == null || wall_hit_status.range > hs.range) && (hs.is_hit))
+                    {
+                        wall_hit_status = hs;
+                        hit_wall = wall;
+                    }
                 }
-            }
-            if (wall_hit_status != null)
-            {
-                if (ground_hit_status == null /*|| (ground_hit_status.range < wall_hit_status.range)*/)
+                if (wall_hit_status != null)
                 {
+                    if (ground_hit_status == null /*|| (ground_hit_status.range < wall_hit_status.range)*/)
+                    {
+                    }
+                    map_cursor_wall = hit_wall;
                 }
-                map_cursor_wall = hit_wall;
             }
 
             // ユニットのカーソル判定（こっちがあるなら上書きする）
