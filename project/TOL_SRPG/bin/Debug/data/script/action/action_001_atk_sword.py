@@ -11,11 +11,11 @@ def EffectValue(action_unit, target_unit, range):
 	return v
 
 def ActionEffect( is_hit, target_unit, effect_value ):
-	Effect.PlaySound( "戦闘／攻撃／剣・開始", 0.5 )
-	Action.Wait(20)
+	effect.PlaySound( "戦闘／攻撃／剣・開始", 0.5 )
+	action.Wait(20)
 	if is_hit:
-		Effect.PlaySound( "戦闘／攻撃／剣・終了", 0.5 )
-		Effect.Damage( target_unit, effect_value )
-		Effect.Action( "$CD$effect_damage.py" )
+		effect.PlaySound( "戦闘／攻撃／剣・終了", 0.5 )
+		#Effect.Damage( target_unit, effect_value ) # 複数回実行するとバグる、不安定、たぶんマルチスレッドのせい？
+		effect.Action( "$CD$effect_damage.py", [target_unit, effect_value] )
 	else:
-		Effect.PlaySound( "戦闘／攻撃／剣・失敗", 0.5 )
+		effect.PlaySound( "戦闘／攻撃／剣・失敗", 0.5 )

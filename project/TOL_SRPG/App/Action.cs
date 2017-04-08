@@ -62,6 +62,7 @@ namespace TOL_SRPG.App
 
                 foreach (var a in delete_actions)
                 {
+                    a.Dispose();
                     actions.Remove(a);
                 }
             }

@@ -71,9 +71,9 @@ namespace TOL_SRPG.App.ScriptConector
                 ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, value, target_unit));
             }
 
-            public void Action( string script_path )
+            public void Action( string script_path, dynamic param )
             {
-                var de = new DrawEffect(script_manager.GetPath(script_path));
+                var de = new DrawEffect(script_manager.GetPath(script_path), param);
                 ActionManager.Add(de);
             }
         }
@@ -122,8 +122,8 @@ namespace TOL_SRPG.App.ScriptConector
             action = new Action();
 
             python_script = new PythonScript(script_path);
-            python_script.SetVariable("Effect", effect);
-            python_script.SetVariable("Action", action);
+            python_script.SetVariable("effect", effect);
+            python_script.SetVariable("action", action);
 
             this.is_hit = is_hit;
             this.effect_value = effect_value;
@@ -162,6 +162,7 @@ namespace TOL_SRPG.App.ScriptConector
     {
         static BattleMapEffectScriptConectorManager battle_map_effect_script_conector_manager = null;
         List<BattleMapEffectScriptConector> scripts = new List<BattleMapEffectScriptConector>();
+        object lock_action_foreach = new object();
 
         public BattleMapEffectScriptConectorManager()
         {
@@ -170,30 +171,34 @@ namespace TOL_SRPG.App.ScriptConector
 
         static public void Add(BattleMapEffectScriptConector a)
         {
-            //lock (lock_action_foreach)
-            //{
-            a.Run();
-            battle_map_effect_script_conector_manager.scripts.Add(a);
-            //}
+            lock (battle_map_effect_script_conector_manager.lock_action_foreach)
+            {
+                a.Run();
+                battle_map_effect_script_conector_manager.scripts.Add(a);
+            }
         }
 
         public void Update()
         {
-            if (battle_map_effect_script_conector_manager.scripts.Count == 0) return;
-
-            List<BattleMapEffectScriptConector> delete_scripts = new List<BattleMapEffectScriptConector>();
-            foreach ( var s in battle_map_effect_script_conector_manager.scripts)
+            lock (battle_map_effect_script_conector_manager.lock_action_foreach)
             {
-                s.Update();
-                if(s.IsEnd())
+                if (battle_map_effect_script_conector_manager.scripts.Count == 0) return;
+
+                List<BattleMapEffectScriptConector> delete_scripts = new List<BattleMapEffectScriptConector>();
+                foreach ( var s in battle_map_effect_script_conector_manager.scripts)
                 {
-                    delete_scripts.Add(s);
+                    s.Update();
+                    if(s.IsEnd())
+                    {
+                        delete_scripts.Add(s);
+                    }
                 }
-            }
 
-            foreach (var a in delete_scripts)
-            {
-                scripts.Remove(a);
+                foreach (var a in delete_scripts)
+                {
+                    a.Dispose();
+                    scripts.Remove(a);
+                }
             }
         }
 
