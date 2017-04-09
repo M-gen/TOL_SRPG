@@ -62,13 +62,23 @@ namespace TOL_SRPG.App.ScriptConector
                 SoundManager.PlaySound(sound_key, volume);
             }
 
-            public void Damage( Unit target_unit, int value )
+            //public void Damage( Unit target_unit, int value )
+            //{
+            //    var game_main = GameMain.GetInstance();
+            //    var g3d_map = game_main.g3d_map;
+            //    var pos = g3d_map.GetScreenPositionByUnitTop(target_unit.map_x, target_unit.map_y);
+
+            //    ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, value, target_unit));
+            //}
+            public void ActionShoot( int start_map_x, int start_map_y, int start_height_offset, int target_map_x, int target_map_y, int target_height_offset)
             {
                 var game_main = GameMain.GetInstance();
                 var g3d_map = game_main.g3d_map;
-                var pos = g3d_map.GetScreenPositionByUnitTop(target_unit.map_x, target_unit.map_y);
 
-                ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, value, target_unit));
+                var height_offset = 1.0f;
+                var route_as_shoot = new RouteAsShoot(start_map_x, start_map_y, height_offset, target_map_x, target_map_y, height_offset, 0);
+
+                ActionManager.Add(new ActionShootArrow(0, route_as_shoot, true));
             }
 
             public void Action( string script_path, dynamic param )
@@ -113,9 +123,10 @@ namespace TOL_SRPG.App.ScriptConector
         Thread thread;
         bool is_hit = true;
         int effect_value = 0;
-        Unit target_unit = null;
+        Unit action_unit = null; // 行動ユニット
+        Unit target_unit = null; // 対象ユニット
 
-        public BattleMapEffectScriptConector(string script_path, bool is_hit, int effect_value, Unit target_unit)
+        public BattleMapEffectScriptConector(string script_path, bool is_hit, int effect_value, Unit action_unit, Unit target_unit)
         {
             var script_manager = new ScriptManager (script_path);
             effect = new Effect(script_manager);
@@ -127,6 +138,7 @@ namespace TOL_SRPG.App.ScriptConector
 
             this.is_hit = is_hit;
             this.effect_value = effect_value;
+            this.action_unit = action_unit;
             this.target_unit = target_unit;
         }
 
@@ -142,7 +154,7 @@ namespace TOL_SRPG.App.ScriptConector
         public void _Run()
         {
             action.is_work_wait = true;
-            python_script.script.ActionEffect(is_hit, target_unit, effect_value);
+            python_script.script.Action(is_hit, action_unit, target_unit, effect_value);
             action.is_work_wait = false;
             this.is_end = true;
         }
@@ -158,7 +170,7 @@ namespace TOL_SRPG.App.ScriptConector
         }
     }
 
-    public class BattleMapEffectScriptConectorManager
+    public class BattleMapEffectScriptConectorManager : IDisposable
     {
         static BattleMapEffectScriptConectorManager battle_map_effect_script_conector_manager = null;
         List<BattleMapEffectScriptConector> scripts = new List<BattleMapEffectScriptConector>();
@@ -208,6 +220,21 @@ namespace TOL_SRPG.App.ScriptConector
             if (battle_map_effect_script_conector_manager.scripts.Count > 0) return true;
             return false;
         }
+
+        // 開放処理
+        public void Dispose()
+        {
+            lock (battle_map_effect_script_conector_manager.lock_action_foreach)
+            {
+                // スレッドが残ってしまうので
+                // 処理がすべて終わるまで強制でUpdateさせる、（他にいい方法があったらいいんだが...）
+                while (battle_map_effect_script_conector_manager.scripts.Count > 0)
+                {
+                    Update();
+                }
+            }
+        }
+
     }
 
 

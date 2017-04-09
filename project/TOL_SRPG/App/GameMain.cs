@@ -195,6 +195,7 @@ namespace TOL_SRPG.App
         public override void Release()
         {
             stask_manager.Dispose();
+            battle_map_effect_script_conector_manager.Dispose();
         }
 
         public void DrawDebug()

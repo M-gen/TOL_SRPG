@@ -55,6 +55,7 @@ namespace TOL_SRPG.App
 
         public BattleAI(SceneBattle scene_battle, Unit select_unit)
         {
+            Console.WriteLine("pos " + select_unit.map_x + "," + select_unit.map_y);
             this.scene_battle = scene_battle;
             this.select_unit = select_unit;
 
@@ -74,12 +75,9 @@ namespace TOL_SRPG.App
         {
             var game_main = GameMain.GetInstance();
             var g3d_map = game_main.g3d_map;
-            //var user_interface = game_main.user_interface;
-            //var game_base = game_main.game_base;
 
             // まず移動させよう
             // 移動範囲を表示、算出して
-            //g3d_map.SetMoveAreaEffect(select_unit.map_x, select_unit.map_y, select_unit.bt.movement_force, select_unit.bt.jumping_force, "");
             move_area.Check(select_unit.map_x, select_unit.map_y, select_unit.bt.status["MOVE"].now, select_unit.bt.status["JUMP"].now);
 
             // 移動できる場所をリストアップ
@@ -137,12 +135,8 @@ namespace TOL_SRPG.App
                 STaskManager.Add(t);
                 t.WaitEnd();
 
-                //var t = new STask(_Run_DoMove,new SIPoint(max_mp.map_x, max_mp.map_y));
-                //STaskManager.Add(t);
-                //t.WaitEnd();
-                ////select_unit.Move(max_mp.map_x, max_mp.map_y, true);
-                ////g3d_map.ClearRangeAreaEffect();
             }
+            Console.WriteLine("pos " + select_unit.map_x + "," + select_unit.map_y);
 
             Thread.Sleep(100);
             // 行動を決める
@@ -153,6 +147,7 @@ namespace TOL_SRPG.App
                 {
 
                     Console.WriteLine("----A");
+                    Console.WriteLine("pos " + select_unit.map_x + "," + select_unit.map_y);
                     var t = new STask((param) =>
                     {
                         var a = action_datas.actions[0];
@@ -168,8 +163,10 @@ namespace TOL_SRPG.App
                         scene_battle.DoAction(a.command, ad.range_type, select_unit, a.target_map_x, a.target_map_y, false);
                     }, null);
                     Console.WriteLine("----B");
+                    Console.WriteLine("pos " + select_unit.map_x + "," + select_unit.map_y);
                     STaskManager.Add(t);
                     Console.WriteLine("----C");
+                    Console.WriteLine("pos " + select_unit.map_x + "," + select_unit.map_y);
                     t.WaitEnd();
                 }
             }
@@ -245,113 +242,6 @@ namespace TOL_SRPG.App
                         }
                     }
                 }
-
-                //switch (action.name)
-                //{
-                //    case "攻撃／剣":
-                //        {
-                //            action_target_area.range_min = 1;
-                //            action_target_area.Check(map_x, map_y, 1, 1);
-
-                //            for (var mx = 0; mx < action_target_area.map_w; mx++)
-                //            {
-                //                for (var my = 0; my < action_target_area.map_h; my++)
-                //                {
-                //                    if (action_target_area.IsInside(mx, my))
-                //                    {
-                //                        string my_group = game_main.unit_manager.GetUnitGroup(select_unit.map_x, select_unit.map_y);
-                //                        string target_group = game_main.unit_manager.GetUnitGroup(mx, my);
-                //                        if (my_group != target_group)
-                //                        {
-                //                            num++;
-                //                            var ep = 5;
-                //                            if (effective_point_max < ep) effective_point_max = ep;
-                //                            if (action_datas!=null)
-                //                            {
-                //                                var a = new Action();
-                //                                a.command = action.name;
-                //                                a.target = game_main.unit_manager.GetUnit(mx, my);
-                //                                a.target_map_x = mx;
-                //                                a.target_map_y = my;
-                //                                action_datas.actions.Add(a);
-                //                            }
-                //                        }
-
-                //                    }
-                //                }
-                //            }
-                //        }
-                //        break;
-                //    case "攻撃／弓":
-                //        {
-                //             とりあえず、3～6の射程扱いで計算する
-                //            action_target_area.range_min = 3;
-                //            action_target_area.Check(map_x, map_y, 6, 1);
-
-                //            for (var mx = 0; mx < action_target_area.map_w; mx++)
-                //            {
-                //                for (var my = 0; my < action_target_area.map_h; my++)
-                //                {
-                //                    if (action_target_area.IsInside(mx, my))
-                //                    {
-                //                        string my_group = game_main.unit_manager.GetUnitGroup(select_unit.map_x, select_unit.map_y);
-                //                        string target_group = game_main.unit_manager.GetUnitGroup(mx, my);
-                //                        if (my_group != target_group)
-                //                        {
-                //                            num++;
-                //                            var ep = 5;
-                //                            if (effective_point_max < ep) effective_point_max = ep;
-                //                            if (action_datas != null)
-                //                            {
-                //                                var a = new Action();
-                //                                a.command = action.name;
-                //                                a.target = game_main.unit_manager.GetUnit(mx, my);
-                //                                a.target_map_x = mx;
-                //                                a.target_map_y = my;
-                //                                action_datas.actions.Add(a);
-                //                            }
-                //                        }
-
-                //                    }
-                //                }
-                //            }
-                //        }
-                //        break;
-                //    case "攻撃／ヒートボイル":
-                //        {
-                //            action_target_area.range_min = 2;
-                //            action_target_area.Check(map_x, map_y, 4, 1);
-
-                //            for (var mx = 0; mx < action_target_area.map_w; mx++)
-                //            {
-                //                for (var my = 0; my < action_target_area.map_h; my++)
-                //                {
-                //                    if (action_target_area.IsInside(mx, my))
-                //                    {
-                //                        string my_group = game_main.unit_manager.GetUnitGroup(select_unit.map_x, select_unit.map_y);
-                //                        string target_group = game_main.unit_manager.GetUnitGroup(mx, my);
-                //                        if (my_group != target_group)
-                //                        {
-                //                            num++;
-                //                            var ep = 5;
-                //                            if (effective_point_max < ep) effective_point_max = ep;
-                //                            if (action_datas != null)
-                //                            {
-                //                                var a = new Action();
-                //                                a.command = action.name;
-                //                                a.target = game_main.unit_manager.GetUnit(mx, my);
-                //                                a.target_map_x = mx;
-                //                                a.target_map_y = my;
-                //                                action_datas.actions.Add(a);
-                //                            }
-                //                        }
-
-                //                    }
-                //                }
-                //            }
-                //        }
-                //        break;
-                //}
 
                 if (num>0)
                 {

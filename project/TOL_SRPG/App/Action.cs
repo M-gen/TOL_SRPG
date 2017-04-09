@@ -313,9 +313,6 @@ namespace TOL_SRPG.App
             var now_x = route_xz_list[xz_time].X * correct;
             var now_y = route_y_list[y_time].Y * correct;
             var now_z = route_xz_list[xz_time].Y * correct;
-            //var rot_x = (float)direction_list[y_time].rot;
-            //if (rot_revers) rot_x += (float)(Math.PI);
-
 
             // 回転で対応するのが難しかったので
             // 矢にモーションを付けて、角度をつけるようにした
@@ -348,23 +345,6 @@ namespace TOL_SRPG.App
 
             timer++;
 
-            if (timer == 1)
-            {
-                //DX.PlaySoundFile("data/sound/戦闘／攻撃／矢を放った/A5_04115.WAV", DX.DX_PLAYTYPE_NORMAL);
-                SoundManager.PlaySound("戦闘／攻撃／弓・開始", 0.5);
-            }
-            if (timer == 99)
-            {
-                if (this.is_success)
-                {
-                    SoundManager.PlaySound("戦闘／攻撃／弓・終了", 0.5);
-                }
-                else
-                {
-                    SoundManager.PlaySound("戦闘／攻撃／弓・失敗", 0.5);
-                }
-                model_arrow.Release();
-            }
             if (timer >= 100) is_end = true;
         }
 
@@ -372,7 +352,6 @@ namespace TOL_SRPG.App
         public override void Draw()
         {
             if (timer_start_wait > 0) return;
-            //if (timer > 99) return;
 
             model_arrow.Draw();
 
@@ -380,84 +359,84 @@ namespace TOL_SRPG.App
 
     }
 
-    public class ActionSwing : Action
-    {
-        int timer = 0;
-        int timer_start_wait = 0;
+    //public class ActionSwing : Action
+    //{
+    //    int timer = 0;
+    //    int timer_start_wait = 0;
 
-        public ActionSwing(int start_wait = 0)
-        {
-            this.timer_start_wait = start_wait;
-        }
+    //    public ActionSwing(int start_wait = 0)
+    //    {
+    //        this.timer_start_wait = start_wait;
+    //    }
 
-        public override void Update()
-        {
-            if (timer_start_wait > 0)
-            {
-                timer_start_wait--;
-                return;
-            }
-
-
-            timer++;
-
-            if (timer == 1)
-            {
-                SoundManager.PlaySound("戦闘／攻撃／剣・開始", 0.5);
-            }
-            else if (timer == 20)
-            {
-                SoundManager.PlaySound("戦闘／攻撃／剣・終了", 0.5);
-            }
-
-            if (timer >= 100) is_end = true;
-        }
+    //    public override void Update()
+    //    {
+    //        if (timer_start_wait > 0)
+    //        {
+    //            timer_start_wait--;
+    //            return;
+    //        }
 
 
-        public override void Draw()
-        {
-            if (timer_start_wait > 0) return;
+    //        timer++;
 
-        }
-    }
+    //        if (timer == 1)
+    //        {
+    //            SoundManager.PlaySound("戦闘／攻撃／剣・開始", 0.5);
+    //        }
+    //        else if (timer == 20)
+    //        {
+    //            SoundManager.PlaySound("戦闘／攻撃／剣・終了", 0.5);
+    //        }
 
-    public class ActionSimmple : Action
-    {
-        int timer = 0;
-        int timer_start_wait = 0;
-        string sound_key;
-
-        public ActionSimmple(int start_wait, string sound_key)
-        {
-            this.timer_start_wait = start_wait;
-            this.sound_key = sound_key;
-        }
-
-        public override void Update()
-        {
-            if (timer_start_wait > 0)
-            {
-                timer_start_wait--;
-                return;
-            }
+    //        if (timer >= 100) is_end = true;
+    //    }
 
 
-            timer++;
+    //    public override void Draw()
+    //    {
+    //        if (timer_start_wait > 0) return;
 
-            if (timer == 1)
-            {
-                SoundManager.PlaySound( sound_key, 0.5);
-            }
-            if (timer >= 1) is_end = true;
-        }
+    //    }
+    //}
+
+    //public class ActionSimmple : Action
+    //{
+    //    int timer = 0;
+    //    int timer_start_wait = 0;
+    //    string sound_key;
+
+    //    public ActionSimmple(int start_wait, string sound_key)
+    //    {
+    //        this.timer_start_wait = start_wait;
+    //        this.sound_key = sound_key;
+    //    }
+
+    //    public override void Update()
+    //    {
+    //        if (timer_start_wait > 0)
+    //        {
+    //            timer_start_wait--;
+    //            return;
+    //        }
 
 
-        public override void Draw()
-        {
-            if (timer_start_wait > 0) return;
+    //        timer++;
 
-        }
-    }
+    //        if (timer == 1)
+    //        {
+    //            SoundManager.PlaySound( sound_key, 0.5);
+    //        }
+    //        if (timer >= 1) is_end = true;
+    //    }
+
+
+    //    public override void Draw()
+    //    {
+    //        if (timer_start_wait > 0) return;
+
+    //    }
+    //}
 
     //// 戦闘不能になる
     //public class ActionUnableToFight : Action

@@ -45,6 +45,7 @@ namespace TOL_SRPG.App
             public Dictionary<string, BTS> status = new Dictionary<string, BTS>();
             
             public bool is_alive = true;
+            public bool is_reserve_dead = false; // is_alive=falseとする予定であることを示す
         }
 
 
@@ -94,6 +95,17 @@ namespace TOL_SRPG.App
             {
                 SetColor(color_no);
             }
+        }
+
+        /// <summary>
+        /// ダミー(無効対象など)のコンストラクタ
+        /// </summary>
+        /// <param name="map_x"></param>
+        /// <param name="map_y"></param>
+        public Unit(int map_x, int map_y)
+        {
+            this.map_x = map_x;
+            this.map_y = map_y;
         }
 
         private void Setup()
@@ -263,6 +275,11 @@ namespace TOL_SRPG.App
 
         public HitStatus CheckHit( S3DLine line )
         {
+            if (!bt.is_alive || bt.is_reserve_dead) // 戦闘不能ないし、戦闘不要の役がされている
+            {
+                return new HitStatus();
+            }
+
             return hit_check_cube.CheckHit(line);
         }
     }
@@ -343,7 +360,7 @@ namespace TOL_SRPG.App
             active_units.Clear();
             foreach (var u in units)
             {
-                if (!u.unit.bt.is_alive) continue; // 戦闘不能、退場しているキャラを除外する
+                if (!u.unit.bt.is_alive || u.unit.bt.is_reserve_dead) continue; // 戦闘不能・退場・戦闘不能予約されているキャラを除外する
 
                 var now = u.unit.bt.status["WT"].now;
                 if (now > 0)

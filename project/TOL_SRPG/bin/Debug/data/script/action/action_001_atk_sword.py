@@ -6,11 +6,11 @@ def Setup( action_data ):
 	action_data.type        = "攻撃"
 	action_data.SetRange( 1, 1, "近接", "範囲内" )
 
-def EffectValue(action_unit, target_unit, range):
+def EffectValue(action_unit, target_unit, range_):
 	v = action_unit.status["ATK"] * 1.00 - target_unit.status["DEF"] * 0.50
 	return v
 
-def ActionEffect( is_hit, target_unit, effect_value ):
+def Action( is_hit, action_unit, target_unit, effect_value ):
 	effect.PlaySound( "戦闘／攻撃／剣・開始", 0.5 )
 	action.Wait(20)
 	if is_hit:

@@ -444,53 +444,79 @@ namespace TOL_SRPG.App
             // todo: 行動のモーション、サウンドに関わるため、一旦はこのまま（先に他を整理）
             switch (command)
             {
-                case "Basic／攻撃／剣":
-                    {
-                        var damage = GetDamage(action_unit, target_unit, action_data);
-                        var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
-                        //ActionManager.Add(new ActionSwing(0));
-                        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path,true, damage, target_unit);
-                        //action.Run();
-                        //ActionManager.Add(action);
-                        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
-
-                        //ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, damage, target_unit));
-                    }
-                    break;
-                case "Basic／攻撃／弓":
+                default: // 対象が単体のものはこれでいけるはず
                     {
                         var damage = 0;
                         var is_success = target_unit != null;
-                        if (is_success)
+                        if (is_success) damage = GetDamage(action_unit, target_unit, action_data);
+                        if (target_unit==null)
                         {
-                            damage = GetDamage(action_unit, target_unit, action_data);
+                            // ダミーの対象ユニットを作成しておく
+                            target_unit = new Unit(target_map_x, target_map_y);
                         }
-                        var start_map_x = g3d_map.action_target_area.start_map_x;
-                        var start_map_y = g3d_map.action_target_area.start_map_y;
-
-                        // todo: 攻撃アニメーションで必要な情報のため
-                        // ここ変えたほうが良さそうだけどね...
-                        // たぶんAction側に軌道データもたせたほうが良い
-                        var height_offset = 1.0f;
-                        var route_as_shoot = new RouteAsShoot(start_map_x, start_map_y, height_offset, target_map_x, target_map_y, height_offset, 0);
-
-                        var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
-
-                        ActionManager.Add(new ActionShootArrow(0, route_as_shoot, is_success));
-                        if (is_success)
+                        else
                         {
-                            ActionManager.Add(new ActionDamage(95, pos.X, pos.Y, damage, target_unit));
+                            // 攻撃の場合、ダメージでHPが0になる場合、この時点で、戦闘不能予約をしておく
+                            var hp = target_unit.bt.status["HP"].now - damage;
+                            if (hp <= 0) target_unit.bt.is_reserve_dead = true;
                         }
+
+                        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path, is_success, damage, action_unit, target_unit);
+                        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
+
                     }
                     break;
-                case "Basic／攻撃／ヒートボイル":
-                    {
-                        var damage = GetDamage(action_unit, target_unit, action_data);
-                        var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
-                        ActionManager.Add(new ActionSimmple(0, "戦闘／攻撃／魔法・ヒートボイル"));
-                        ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, damage, target_unit));
-                    }
-                    break;
+                //case "Basic／攻撃／剣":
+                //    {
+                //        var damage = GetDamage(action_unit, target_unit, action_data);
+                //        var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
+                //        //ActionManager.Add(new ActionSwing(0));
+                //        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path,true, damage, action_unit, target_unit);
+                //        //action.Run();
+                //        //ActionManager.Add(action);
+                //        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
+
+                //        //ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, damage, target_unit));
+                //    }
+                //    break;
+                //case "Basic／攻撃／弓":
+                //    {
+                //        var damage = 0;
+                //        var is_success = target_unit != null;
+                //        if (is_success) damage = GetDamage(action_unit, target_unit, action_data);
+                //        //var start_map_x = g3d_map.action_target_area.start_map_x;
+                //        //var start_map_y = g3d_map.action_target_area.start_map_y;
+
+                //        //// todo: 攻撃アニメーションで必要な情報のため
+                //        //// ここ変えたほうが良さそうだけどね...
+                //        //// たぶんAction側に軌道データもたせたほうが良い
+                //        //var height_offset = 1.0f;
+                //        //var route_as_shoot = new RouteAsShoot(start_map_x, start_map_y, height_offset, target_map_x, target_map_y, height_offset, 0);
+
+                //        ////var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
+
+                //        //ActionManager.Add(new ActionShootArrow(0, route_as_shoot, is_success));
+
+                //        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path, true, damage, action_unit, target_unit);
+                //        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
+                //        //if (is_success)
+                //        //{
+                //        //    ActionManager.Add(new ActionDamage(95, pos.X, pos.Y, damage, target_unit));
+                //        //}
+                //    }
+                //    break;
+                //case "Basic／攻撃／ヒートボイル":
+                //    {
+                //        var damage = GetDamage(action_unit, target_unit, action_data);
+
+                //        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path, true, damage, action_unit, target_unit);
+                //        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
+
+                //        //var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
+                //        //ActionManager.Add(new ActionSimmple(0, "戦闘／攻撃／魔法・ヒートボイル"));
+                //        //ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, damage, target_unit));
+                //    }
+                //    break;
             }
             if (is_user_owner)
             {
@@ -553,6 +579,7 @@ namespace TOL_SRPG.App
         // 次の手番ユニットを決める
         public void NextUnitTurn()
         {
+
             // 旧手番ユニットのWTを調整しておく
             if (turn_owner_unit.unit_manager_status != null && turn_owner_unit.unit_manager_status.unit.bt.is_alive)
             {
@@ -562,9 +589,18 @@ namespace TOL_SRPG.App
             var game_main = GameMain.GetInstance();
             var unit_manager = game_main.unit_manager;
 
+            // 戦闘不能を予定から確定にしておく（念のため）
+            // 他の、行動効果の確定も個々でやったほうが良さそう
+            foreach (var u in unit_manager.units )
+            {
+                if ( u.unit.bt.is_reserve_dead )
+                {
+                    u.unit.SetAlive(false);
+                }
+            }
 
 
-            if (unit_manager.active_units.Count() == 0)
+                if (unit_manager.active_units.Count() == 0)
             {
                 while (unit_manager.active_units.Count() == 0)
                 {

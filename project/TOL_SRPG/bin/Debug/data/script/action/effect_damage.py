@@ -37,7 +37,9 @@ def Update():
             hp.now = 0
             is_hp_0 = True         # 戦闘不能
         else:
-            status.ReleaseFreeze() # 操作の停止を解除
+            status.ReleaseFreeze()     # 操作の停止を解除
+    #if (timer == 20) and (is_hp_0==False):
+    #    status.ReleaseFreeze()     # 操作の停止を解除
 
     if is_hp_0:
         # 戦闘不能による透過
