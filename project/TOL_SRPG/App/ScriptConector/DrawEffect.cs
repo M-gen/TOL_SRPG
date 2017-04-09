@@ -10,6 +10,25 @@ using TOL_SRPG.Base;
 namespace TOL_SRPG.App.ScriptConector
 {
     //
+    public class ActionStatusScriptConector : IDisposable
+    {
+        Action action;
+
+        public ActionStatusScriptConector(Action action)
+        {
+            this.action = action;
+        }
+        
+        public void ReleaseFreeze()
+        {
+            action.is_frease = false;
+        }
+
+        public void Dispose()
+        {
+
+        }
+    }
 
     public class DrawEffectScriptConector : IDisposable
     {
@@ -109,11 +128,23 @@ namespace TOL_SRPG.App.ScriptConector
             return res;
         }
 
-        // ユニットの頭部分の座標を取得する
-        public IronPython.Runtime.PythonTuple GetScreenPositionByUnitTop( Unit unit )
+        // 指定したマップのマスから、スクリーン座標を取得する
+        public IronPython.Runtime.PythonTuple GetScreenPositionByMapPos(int map_x, int map_y, double offset_x, double offset_y, double offset_z)
         {
-            var pos = GameMain.GetInstance().g3d_map.GetScreenPositionByUnitTop(unit.map_x, unit.map_y);
-            var res = new IronPython.Runtime.PythonTuple(new[] { pos.X, pos.Y });
+            //var p = new Point(0, 0);
+
+            float dx = 0, dy = 0, dz = 0;
+            GameMain.GetInstance().g3d_map.Get3DPos(map_x, map_y, ref dx, ref dy, ref dz);
+
+            dx += (float)offset_x;
+            dy += (float)offset_y;
+            dz += (float)offset_z;
+            var dv = DX.VGet(dx, dy, dz);
+            var v = DX.ConvWorldPosToScreenPos(dv);
+            //p.X = (int)v.x;
+            //p.Y = (int)v.y;
+
+            var res = new IronPython.Runtime.PythonTuple(new[] { (int)v.x, (int)v.y });
             return res;
         }
 
@@ -130,20 +161,23 @@ namespace TOL_SRPG.App.ScriptConector
     public class DrawEffect : Action
     {
         PythonScript python_script;
-        DrawEffectScriptConector draw;
+        DrawEffectScriptConector             draw;
         BattleMapEffectScriptConector.Effect effect;
+        ActionStatusScriptConector           status;
 
 
         public DrawEffect(string script_path, dynamic param)
         {
             draw = new DrawEffectScriptConector();
             effect = new BattleMapEffectScriptConector.Effect(new ScriptManager(script_path));
+            status = new ActionStatusScriptConector(this);
 
             python_script = new PythonScript(script_path,
                     (s) => {
                         s.SetVariable("param",  param);
                         s.SetVariable("draw",   draw);
                         s.SetVariable("effect", effect);
+                        s.SetVariable("status", status);
                     }
                 );
         }
@@ -165,6 +199,7 @@ namespace TOL_SRPG.App.ScriptConector
         {
             base.Dispose();
             draw.Dispose();
+            status.Dispose();
         }
     }
 }

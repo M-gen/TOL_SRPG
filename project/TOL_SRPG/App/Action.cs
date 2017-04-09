@@ -13,6 +13,7 @@ namespace TOL_SRPG.App
     public class Action : IDisposable
     {
         protected bool is_end = false;
+        public bool is_frease = true;
 
         public virtual void Update() { }
         public virtual void Draw() { }
@@ -88,25 +89,26 @@ namespace TOL_SRPG.App
             {
                 foreach (var a in actions)
                 {
-                    var ad = a as ActionDamage;
-                    if ( ad!=null) 
+                    //var ad = a as ActionDamage;
+                    if ( a.is_frease ) 
                     {
-                        if (ad.is_unable_to_fight)
-                        {
-                            return true; // 戦闘不能が内部的にも確定してないので待機する必要がある
-                        }
-                        else if (ad.timer > 30)
-                        {
-                            // ダメージを与えるだけであれば、早めに切り上げ無いとテンポが悪いのと、支障がない
-                        }
-                        else
-                        {
-                            return true;
-                        }
+                        //if (ad.is_unable_to_fight)
+                        //{
+                        //    return true; // 戦闘不能が内部的にも確定してないので待機する必要がある
+                        //}
+                        //else if (ad.timer > 30)
+                        //{
+                        //    // ダメージを与えるだけであれば、早めに切り上げ無いとテンポが悪いのと、支障がない
+                        //}
+                        //else
+                        //{
+                        //    return true;
+                        //}
+                        return true;
                     }
                     else
                     {
-                        return true; // アクションが残っているうちはキー操作をさせない
+                        return false; 
                     }
                 }
                 //if (actions.Count() > 0) return true;

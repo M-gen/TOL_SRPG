@@ -10,6 +10,11 @@ font.frame_color = draw.Color(255,255,0,0)     # 枠カラー
 
 add_y = 0
 add_y_speed = -50
+# 戦闘不能によるtarget_unit.SetAlive(False)の後は
+# target_unitのマップ座標が不定になるため、予め取得しておく
+map_x = target_unit.map_x
+map_y = target_unit.map_y
+
 is_hp_0 = False # 戦闘不能になったかどうか
 
 def Update():
@@ -30,7 +35,9 @@ def Update():
         hp.now -= damage_value
         if hp.now <= 0:
             hp.now = 0
-            is_hp_0 = True # 戦闘不能
+            is_hp_0 = True         # 戦闘不能
+        else:
+            status.ReleaseFreeze() # 操作の停止を解除
 
     if is_hp_0:
         # 戦闘不能による透過
@@ -44,10 +51,13 @@ def Update():
         if timer == 20:
             target_unit.SetMotion("戦闘不能")
             effect.PlaySound("戦闘／倒れる音", 0.5)
+            #target_unit.SetAlive(False)
+        if timer == end:
+            target_unit.SetAlive(False)
 
     if timer > 160:
-        if is_hp_0: # 戦闘不能によるキャラクターをマップから削除
-            target_unit.SetAlive(False)
+        #if is_hp_0: # 戦闘不能によるキャラクターをマップから削除
+        #    target_unit.SetAlive(False)
         return False
 
 def Draw():
@@ -66,5 +76,6 @@ def Draw():
 
     text = str(damage_value)
     w = draw.GetTextWidth(text, font)
-    x, y = draw.GetScreenPositionByUnitTop(target_unit)
+    #x, y = draw.GetScreenPositionByUnitTop(target_unit)
+    x, y = draw.GetScreenPositionByMapPos( map_x, map_y, 0, 20, 0)
     draw.Text( x-w/2, y+add_y, text, font )

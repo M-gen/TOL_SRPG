@@ -15,7 +15,6 @@ def ActionEffect( is_hit, target_unit, effect_value ):
 	action.Wait(20)
 	if is_hit:
 		effect.PlaySound( "戦闘／攻撃／剣・終了", 0.5 )
-		#Effect.Damage( target_unit, effect_value ) # 複数回実行するとバグる、不安定、たぶんマルチスレッドのせい？
 		effect.Action( "$CD$effect_damage.py", [target_unit, effect_value] )
 	else:
 		effect.PlaySound( "戦闘／攻撃／剣・失敗", 0.5 )
