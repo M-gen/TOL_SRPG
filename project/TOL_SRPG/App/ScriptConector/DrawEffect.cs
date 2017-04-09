@@ -130,22 +130,20 @@ namespace TOL_SRPG.App.ScriptConector
     public class DrawEffect : Action
     {
         PythonScript python_script;
-        //Action action;
-        //Effect effect;
-        //Thread thread;
-        //bool is_hit = true;
-        //int effect_value = 0;
-        //Unit target_unit = null;
-        DrawEffectScriptConector draw_effect_script_conector;
+        DrawEffectScriptConector draw;
+        BattleMapEffectScriptConector.Effect effect;
 
 
         public DrawEffect(string script_path, dynamic param)
         {
-            draw_effect_script_conector = new DrawEffectScriptConector();
+            draw = new DrawEffectScriptConector();
+            effect = new BattleMapEffectScriptConector.Effect(new ScriptManager(script_path));
+
             python_script = new PythonScript(script_path,
                     (s) => {
-                        s.SetVariable("param", param);
-                        s.SetVariable("draw", draw_effect_script_conector);
+                        s.SetVariable("param",  param);
+                        s.SetVariable("draw",   draw);
+                        s.SetVariable("effect", effect);
                     }
                 );
         }
@@ -166,7 +164,7 @@ namespace TOL_SRPG.App.ScriptConector
         public override void Dispose()
         {
             base.Dispose();
-            draw_effect_script_conector.Dispose();
+            draw.Dispose();
         }
     }
 }
