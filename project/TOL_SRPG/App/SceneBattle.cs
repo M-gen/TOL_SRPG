@@ -466,57 +466,6 @@ namespace TOL_SRPG.App
 
                     }
                     break;
-                //case "Basic／攻撃／剣":
-                //    {
-                //        var damage = GetDamage(action_unit, target_unit, action_data);
-                //        var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
-                //        //ActionManager.Add(new ActionSwing(0));
-                //        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path,true, damage, action_unit, target_unit);
-                //        //action.Run();
-                //        //ActionManager.Add(action);
-                //        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
-
-                //        //ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, damage, target_unit));
-                //    }
-                //    break;
-                //case "Basic／攻撃／弓":
-                //    {
-                //        var damage = 0;
-                //        var is_success = target_unit != null;
-                //        if (is_success) damage = GetDamage(action_unit, target_unit, action_data);
-                //        //var start_map_x = g3d_map.action_target_area.start_map_x;
-                //        //var start_map_y = g3d_map.action_target_area.start_map_y;
-
-                //        //// todo: 攻撃アニメーションで必要な情報のため
-                //        //// ここ変えたほうが良さそうだけどね...
-                //        //// たぶんAction側に軌道データもたせたほうが良い
-                //        //var height_offset = 1.0f;
-                //        //var route_as_shoot = new RouteAsShoot(start_map_x, start_map_y, height_offset, target_map_x, target_map_y, height_offset, 0);
-
-                //        ////var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
-
-                //        //ActionManager.Add(new ActionShootArrow(0, route_as_shoot, is_success));
-
-                //        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path, true, damage, action_unit, target_unit);
-                //        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
-                //        //if (is_success)
-                //        //{
-                //        //    ActionManager.Add(new ActionDamage(95, pos.X, pos.Y, damage, target_unit));
-                //        //}
-                //    }
-                //    break;
-                //case "Basic／攻撃／ヒートボイル":
-                //    {
-                //        var damage = GetDamage(action_unit, target_unit, action_data);
-
-                //        var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path, true, damage, action_unit, target_unit);
-                //        ScriptConector.BattleMapEffectScriptConectorManager.Add(action);
-
-                //        //var pos = g3d_map.GetScreenPositionByUnitTop(target_map_x, target_map_y);
-                //        //ActionManager.Add(new ActionSimmple(0, "戦闘／攻撃／魔法・ヒートボイル"));
-                //        //ActionManager.Add(new ActionDamage(15, pos.X, pos.Y, damage, target_unit));
-                //    }
-                //    break;
             }
             if (is_user_owner)
             {

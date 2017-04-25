@@ -4,6 +4,7 @@ def Setup( action_data ):
 	action_data.view_name   = "攻撃／弓"
 	action_data.system_name = "Basic／攻撃／弓"
 	action_data.type        = "攻撃"
+	action_data.target_type = "敵"
 	action_data.SetRange( 1, 4, "投射", "延長可" )
 
 def EffectValue(action_unit, target_unit, range_ ):

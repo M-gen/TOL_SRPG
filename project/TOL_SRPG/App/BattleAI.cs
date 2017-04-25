@@ -221,9 +221,15 @@ namespace TOL_SRPG.App
                     {
                         if (action_target_area.IsInside(mx, my))
                         {
-                            string my_group = game_main.unit_manager.GetUnitGroup(select_unit.map_x, select_unit.map_y);
-                            string target_group = game_main.unit_manager.GetUnitGroup(mx, my);
-                            if (my_group != target_group)
+                            // ここで逆引き的にUnitManagerStatusを取得しているのが胡散臭い（こっちのほうが根っこだから、これもって他方がいいんじゃないかという）
+                            // 攻撃範囲だから、mxとmyはそうじゃないとしても…んーそれも微妙かな
+                            var my_um     = game_main.unit_manager.GetUnitManagerStatus(select_unit.map_x, select_unit.map_y);
+                            var target_um = game_main.unit_manager.GetUnitManagerStatus(mx, my);
+
+                            // ターゲット判定ここでしてるのか...
+                            // 味方、敵、自身
+                            //if (my_group != target_group)
+                            if ( UnitManager.IsCheckGroup(my_um,target_um,ad.target_type))
                             {
                                 num++;
                                 var ep = 5;

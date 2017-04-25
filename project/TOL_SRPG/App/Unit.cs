@@ -311,6 +311,15 @@ namespace TOL_SRPG.App
         }
 
 
+        public UnitManagerStatus GetUnitManagerStatus(int map_x, int map_y)
+        {
+            foreach (var u in units)
+            {
+                if (u.unit.map_x == map_x && u.unit.map_y == map_y) return u;
+            }
+            return null;
+        }
+
         public Unit GetUnit(int map_x, int map_y)
         {
             foreach (var u in units)
@@ -373,6 +382,25 @@ namespace TOL_SRPG.App
                     }
                 }
             }
+        }
+
+        // 対象のグループと比較して、適切かどうかを返す
+        static public bool IsCheckGroup(UnitManagerStatus my, UnitManagerStatus target, string group_type )
+        {
+            switch( group_type)
+            {
+                case "自身":
+                    if (my == target) return true;
+                    return false;
+                case "味方":
+                    if (my.group == target.group) return true;
+                    return false;
+                case "敵":
+                    if (my.group != target.group) return true;
+                    return false;
+            }
+
+            return false;
         }
     }
 

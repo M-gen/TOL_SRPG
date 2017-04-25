@@ -4,6 +4,7 @@ def Setup( action_data ):
 	action_data.view_name   = "攻撃／ヒートボイル"
 	action_data.system_name = "Basic／攻撃／ヒートボイル"
 	action_data.type        = "攻撃"
+	action_data.target_type = "敵"
 	action_data.SetRange( 2, 3, "遠直", "範囲内" )
 
 def EffectValue(action_unit, target_unit, range_ ):

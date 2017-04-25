@@ -11,6 +11,7 @@ namespace TOL_SRPG.App
         public string view_name = "";
         public string system_name = "";
         public string type = "";
+        public string target_type = "";
         public int range_min = 1;
         public int range_max = 1;
         public string range_type    = "近接";
