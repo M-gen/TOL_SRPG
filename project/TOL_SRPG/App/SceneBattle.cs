@@ -731,21 +731,19 @@ namespace TOL_SRPG.App
 
             dm = action_data.GetEffectValue(atack_unit, target_unit, range);
 
-            // 基礎ダメージの算出
-            // = 参照能力値 * 参照能力値補正 + 直接指定 + 乱数指定
-            //var atk = (double)atack_unit.bt.status[action_data.effect_src_main].now * (double)action_data.effect_src_main_correction / 100.0
-            //    + action_data.effect_src_direct + (double)action_data.effect_src_random * game_main.random.NextDouble();
-
-            //// 軽減の算出
-            //// = 参照能力値 * 参照能力値補正
-            //var def = (double)target_unit.bt.status[action_data.effect_dst_main].now * (double)action_data.effect_dst_main_correction / 100.0;
-
-            //// ダメージ算出と端数切り捨て
-            //dm = (int)(atk - def);
-            //if (dm < 0) dm = 0;
-
             return dm;
         }
+
+        //int GetEffect(Unit atack_unit, Unit target_unit, ActionData action_data)
+        //{
+        //    var dm = 0;
+        //    var game_main = GameMain.GetInstance();
+        //    var range = GetRangeBySq(atack_unit, target_unit);
+
+        //    dm = action_data.GetEffectValue(atack_unit, target_unit, range);
+
+        //    return dm;
+        //}
 
         // マス単位の距離を取得
         int GetRangeBySq(Unit a, Unit b)

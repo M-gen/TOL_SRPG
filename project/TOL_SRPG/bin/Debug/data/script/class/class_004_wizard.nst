@@ -2,7 +2,7 @@
 def Setup
 	$ ClassName "ウィザード"
 	$ DefaultImage "data/image/face/face_m2.png"
-	$ DefaultModel "data/model/ch01/_.pmd"
+	$ DefaultModel "data/model/ch04/_.pmd"
 	$ HP   35 5
 	$ ATK  10 2
 	$ DEF  10 1

@@ -6,6 +6,9 @@ target_dir = "release/"
 new_dir_name = "TOL_RPG_0x00xXX"
 main_target_dir = target_dir+new_dir_name+"/"
 
+if (os.path.exists(target_dir)==False):
+	pass #os.mkdir(target_dir)
+
 if (os.path.exists(target_dir+new_dir_name)==False):
     pass #os.mkdir(target_dir+new_dir_name)
 else:
