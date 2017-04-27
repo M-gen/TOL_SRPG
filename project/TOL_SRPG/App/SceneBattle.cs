@@ -457,8 +457,11 @@ namespace TOL_SRPG.App
                         else
                         {
                             // 攻撃の場合、ダメージでHPが0になる場合、この時点で、戦闘不能予約をしておく
-                            var hp = target_unit.bt.status["HP"].now - damage;
-                            if (hp <= 0) target_unit.bt.is_reserve_dead = true;
+                            if (action_data.type == "攻撃")
+                            {
+                                var hp = target_unit.bt.status["HP"].now - damage;
+                                if (hp <= 0) target_unit.bt.is_reserve_dead = true;
+                            }
                         }
 
                         var action = new ScriptConector.BattleMapEffectScriptConector(action_data.script_path, is_success, damage, action_unit, target_unit);

@@ -7,7 +7,8 @@ def Setup
 	ConectSound "戦闘／攻撃／弓・失敗"           "data/sound/戦闘／攻撃／矢、失敗/A5_05158.WAV"
 	ConectSound "戦闘／攻撃／剣・開始"           "data/sound/戦闘／攻撃／スイング/A5_04126.WAV"
 	ConectSound "戦闘／攻撃／剣・終了"           "data/sound/戦闘／ダメージを受けた/A5_04105.WAV"
-	ConectSound "戦闘／攻撃／魔法・ヒートボイル" "data/sound/戦闘／魔法／ヒートボイル/A5_12388.WAV"
+	ConectSound "戦闘／攻撃／魔法・ヒートボイル"  "data/sound/戦闘／魔法／ヒートボイル/A5_12388.WAV"
+	ConectSound "戦闘／回復／魔法・ヒール"        "data/sound/戦闘／魔法／ヒール/回復魔法.WAV"
 	ConectSound "戦闘／倒れる音"                 "data/sound/戦闘／倒れる音/A5_10316.WAV"
 	ConectSound "システム／選択"                 "data/sound/システム／決定音／選択/A5_02041.WAV"
 	ConectSound "システム／解除"                 "data/sound/システム／決定音／選択/A5_02041_pich_m4.wav"
@@ -31,10 +32,10 @@ def Setup
 	SetupClassData "data/script/class/class_004_wizard.nst"
 	SetupClassData "data/script/class/class_005_acolyte.nst"
 
-	 DebugMode "UI"
+	// DebugMode "UI"
 	// DebugMode "Auto"
 
 	// シーンのセットアップ
-	//SetupScene PreBattle "data/script/pre_battle.nst" "data/script/stage_0.nst"
-	SetupScene Battle "data/script/stage_0.nst"
+	SetupScene PreBattle "data/script/pre_battle.nst" "data/script/stage_0.nst"
+	//SetupScene Battle "data/script/stage_0.nst"
 	//SetupScene CreateMap

@@ -15,14 +15,12 @@ add_y_speed = -50
 map_x = target_unit.map_x
 map_y = target_unit.map_y
 
-is_hp_0 = False # 戦闘不能になったかどうか
-
 if target_unit.bt.status["HP"].max < target_unit.bt.status["HP"].now + heal_value:
     heal_value = target_unit.bt.status["HP"].max - target_unit.bt.status["HP"].now
 
 def Update():
     # クラスでないもの？はglobalで宣言が必要?
-    global timer, add_y, add_y_speed, is_hp_0
+    global timer, add_y, add_y_speed
     timer += 1
 
     add_y_speed += 3
@@ -36,33 +34,9 @@ def Update():
         # ダメージ反映処理
         hp = target_unit.bt.status["HP"]
         hp.now += heal_value
-        if hp.now <= 0:
-            hp.now = 0
-            is_hp_0 = True         # 戦闘不能
-        else:
-            status.ReleaseFreeze()     # 操作の停止を解除
-    #if (timer == 20) and (is_hp_0==False):
-    #    status.ReleaseFreeze()     # 操作の停止を解除
-
-    if is_hp_0:
-        # 戦闘不能による透過
-        start = 40
-        wait  = 60
-        end   = start + wait
-        if ( start < timer ) and ( timer < end ):
-            color_a = float(wait - (timer - start)) / wait
-            target_unit.SetAlpha(color_a)
-
-        if timer == 20:
-            target_unit.SetMotion("戦闘不能")
-            effect.PlaySound("戦闘／倒れる音", 0.5)
-            #target_unit.SetAlive(False)
-        if timer == end:
-            target_unit.SetAlive(False)
+        status.ReleaseFreeze()     # 操作の停止を解除
 
     if timer > 160:
-        #if is_hp_0: # 戦闘不能によるキャラクターをマップから削除
-        #    target_unit.SetAlive(False)
         return False
 
 def Draw():

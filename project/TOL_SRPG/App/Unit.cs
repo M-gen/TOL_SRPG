@@ -387,6 +387,8 @@ namespace TOL_SRPG.App
         // 対象のグループと比較して、適切かどうかを返す
         static public bool IsCheckGroup(UnitManagerStatus my, UnitManagerStatus target, string group_type )
         {
+            if (target == null) return false;
+
             switch( group_type)
             {
                 case "自身":
